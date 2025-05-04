@@ -7,8 +7,14 @@ export const votingService = {
     userId: string;
     contractTermId: string;
     vote: 'yes' | 'no' | 'abstain';
+    userRole?: string;
   }) => {
     try {
+      // Validate if user has appropriate role to vote
+      if (voteData.userRole && !['supplier', 'investor', 'buyer'].includes(voteData.userRole.toLowerCase())) {
+        return { success: false, error: 'User role not authorized to vote' };
+      }
+      
       const response = await fetch(`${payloadCmsUrl}/api/votes`, {
         method: 'POST',
         headers: {
@@ -26,6 +32,48 @@ export const votingService = {
       return { success: true, data };
     } catch (error) {
       console.error('Error submitting vote:', error);
+      return { success: false, error };
+    }
+  },
+
+  // Submit a proposal or comment (for freelancers or other roles)
+  submitProposal: async (proposalData: {
+    userId: string;
+    contractId: string;
+    content: string;
+    type: 'proposal' | 'comment';
+  }) => {
+    try {
+      const response = await fetch(`${payloadCmsUrl}/api/proposals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: proposalData.userId,
+          contract: proposalData.contractId,
+          content: proposalData.content,
+          type: proposalData.type,
+          timestamp: new Date().toISOString(),
+          status: 'pending',
+        }),
+      });
+      const data = await response.json();
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error submitting proposal:', error);
+      return { success: false, error };
+    }
+  },
+
+  // Get proposals for a specific contract
+  getProposalsByContractId: async (contractId: string) => {
+    try {
+      const response = await fetch(`${payloadCmsUrl}/api/proposals?where[contract][equals]=${contractId}`);
+      const data = await response.json();
+      return { success: true, data: data.docs };
+    } catch (error) {
+      console.error(`Error fetching proposals for contract ${contractId}:`, error);
       return { success: false, error };
     }
   },

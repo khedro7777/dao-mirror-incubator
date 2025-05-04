@@ -6,6 +6,7 @@ import ContractTerms from './collections/ContractTerms';
 import Votes from './collections/Votes';
 import KycVerification from './collections/KycVerification';
 import Notifications from './collections/Notifications';
+import Proposals from './collections/Proposals';
 
 // Using any type assertion until Payload types are properly imported
 const buildConfig = (config: any) => config;
@@ -22,6 +23,7 @@ export default buildConfig({
     Votes,
     KycVerification,
     Notifications,
+    Proposals,
   ],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
   Users, 
@@ -27,8 +27,10 @@ const ContractDetail = () => {
   const { t } = useTranslation();
   const { id } = useParams<{id: string}>();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview");
   const [userVotes, setUserVotes] = useState<Record<string, Vote>>({});
+  const [proposalContent, setProposalContent] = useState("");
   
   // Fetch contract data
   const { data: contractData, isLoading: isContractLoading, error: contractError } = useQuery({
@@ -39,15 +41,28 @@ const ContractDetail = () => {
   // Handle contract data
   const contract = contractData?.success ? contractData.data : null;
 
+  // Check if user can vote (suppliers, investors, buyers can vote)
+  const canUserVote = () => {
+    if (!user || !user.roles) return false;
+    const votingRoles = ['supplier', 'investor', 'buyer'];
+    return user.roles.some(role => votingRoles.includes(role));
+  };
+
+  // Check if user can submit proposals (all users can submit proposals)
+  const canUserSubmitProposal = () => {
+    return !!user;
+  };
+
   // Vote mutation
   const voteMutation = useMutation({
     mutationFn: (voteData: { termId: string, vote: Vote }) => {
-      if (!id || !voteData.vote) return Promise.reject("Missing contract ID or vote");
+      if (!id || !voteData.vote || !user || !user.id) return Promise.reject("Missing data or unauthorized");
       
       return voting.submitVote({
-        userId: "current-user-id", // In a real app, get this from AuthContext
+        userId: user.id,
         contractTermId: voteData.termId,
-        vote: voteData.vote
+        vote: voteData.vote,
+        userRole: user.roles?.[0]
       });
     },
     onSuccess: (data, variables) => {
@@ -80,13 +95,57 @@ const ContractDetail = () => {
     }
   });
 
+  // Proposal mutation
+  const proposalMutation = useMutation({
+    mutationFn: (content: string) => {
+      if (!id || !content || !user || !user.id) return Promise.reject("Missing data or unauthorized");
+      
+      return voting.submitProposal({
+        userId: user.id,
+        contractId: id,
+        content: content,
+        type: 'proposal'
+      });
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Proposal submitted",
+          description: "Your proposal has been submitted for review.",
+        });
+        setProposalContent("");
+      } else {
+        toast({
+          title: "Submission failed",
+          description: "There was an error submitting your proposal. Please try again.",
+          variant: "destructive",
+        });
+      }
+    },
+    onError: (error) => {
+      console.error("Proposal error:", error);
+      toast({
+        title: "Submission failed",
+        description: "There was an error submitting your proposal. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const handleVote = (termId: string, vote: Vote) => {
-    if (!vote) return;
+    if (!vote || !canUserVote()) return;
     
     voteMutation.mutate({
       termId,
       vote
     });
+  };
+
+  const handleProposalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!proposalContent.trim() || !canUserSubmitProposal()) return;
+    
+    proposalMutation.mutate(proposalContent);
   };
 
   // Mock data for demonstration - replace with real data when backend is connected
@@ -207,22 +266,22 @@ const ContractDetail = () => {
         <div className="flex items-center gap-2 text-gray-300 mb-2">
           <a href="/explore" className="hover:text-primary">Contracts</a>
           <span>/</span>
-          <span className="text-white">{displayContract.title}</span>
+          <span className="text-white">{contract?.title || "Contract Details"}</span>
         </div>
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">{displayContract.title}</h1>
+            <h1 className="text-3xl font-bold text-white mb-1">{contract?.title}</h1>
             <div className="flex items-center gap-3">
               <span className="bg-sidebar-accent px-3 py-1 rounded-full text-xs font-medium">
-                {displayContract.category}
+                {contract?.category || "Contract"}
               </span>
               <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                displayContract.status === "Active" ? "bg-green-900 text-green-300" :
-                displayContract.status === "Pending" ? "bg-yellow-900 text-yellow-300" :
+                contract?.status === "Active" ? "bg-green-900 text-green-300" :
+                contract?.status === "Pending" ? "bg-yellow-900 text-yellow-300" :
                 "bg-red-900 text-red-300"
               }`}>
-                {displayContract.status}
+                {contract?.status || "Status"}
               </span>
             </div>
           </div>
@@ -233,10 +292,11 @@ const ContractDetail = () => {
 
       <div className="space-y-6">
         <Tabs defaultValue="overview" className="w-full" onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 md:w-fit">
+          <TabsList className="grid grid-cols-5 md:w-fit">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="terms">Terms</TabsTrigger>
             <TabsTrigger value="participants">Participants</TabsTrigger>
+            <TabsTrigger value="proposals">Proposals</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
           
@@ -352,10 +412,11 @@ const ContractDetail = () => {
               <h2 className="text-xl font-semibold mb-4">Contract Terms</h2>
               <p className="text-gray-300 text-sm mb-6">
                 Review and vote on contract terms. Each term requires majority approval to be included in the final contract.
+                {!canUserVote() && <span className="text-amber-400 ml-2">Note: Only suppliers, investors, and buyers can vote on terms.</span>}
               </p>
               
               <div className="space-y-6">
-                {displayContract.terms.map(term => (
+                {contract?.terms?.map(term => (
                   <div key={term.id} className="border border-sidebar-border rounded-lg p-4">
                     <div className="mb-3">
                       <p className="text-white">{term.content}</p>
@@ -365,63 +426,69 @@ const ContractDetail = () => {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-green-300">Yes: {term.votes.yes}</span>
-                            <span className="text-xs text-red-300">No: {term.votes.no}</span>
-                            <span className="text-xs text-gray-400">Abstain: {term.votes.abstain}</span>
+                            <span className="text-xs text-green-300">Yes: {term.votes?.yes || 0}</span>
+                            <span className="text-xs text-red-300">No: {term.votes?.no || 0}</span>
+                            <span className="text-xs text-gray-400">Abstain: {term.votes?.abstain || 0}</span>
                           </div>
                           <span className={`text-xs font-medium ${
                             term.status === "Approved" ? "text-green-300" : 
                             term.status === "Rejected" ? "text-red-300" : "text-yellow-300"
                           }`}>
-                            {term.status}
+                            {term.status || "Pending"}
                           </span>
                         </div>
                         <div className="h-1.5 bg-sidebar-border rounded-full w-full overflow-hidden">
                           <div className="flex h-full">
                             <div 
                               className="bg-green-500" 
-                              style={{ width: `${(term.votes.yes / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100}%` }}
+                              style={{ width: `${term.votes ? (term.votes.yes / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100 : 0}%` }}
                             />
                             <div 
                               className="bg-red-500" 
-                              style={{ width: `${(term.votes.no / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100}%` }}
+                              style={{ width: `${term.votes ? (term.votes.no / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100 : 0}%` }}
                             />
                             <div 
                               className="bg-gray-500" 
-                              style={{ width: `${(term.votes.abstain / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100}%` }}
+                              style={{ width: `${term.votes ? (term.votes.abstain / (term.votes.yes + term.votes.no + term.votes.abstain)) * 100 : 0}%` }}
                             />
                           </div>
                         </div>
                       </div>
                       
                       <div className="flex gap-2">
-                        <Button 
-                          variant={userVotes[term.id] === "yes" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleVote(term.id, "yes")}
-                          className={userVotes[term.id] === "yes" ? "bg-green-600 hover:bg-green-700" : ""}
-                          disabled={voteMutation.isPending}
-                        >
-                          Yes
-                        </Button>
-                        <Button 
-                          variant={userVotes[term.id] === "no" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleVote(term.id, "no")}
-                          className={userVotes[term.id] === "no" ? "bg-red-600 hover:bg-red-700" : ""}
-                          disabled={voteMutation.isPending}
-                        >
-                          No
-                        </Button>
-                        <Button 
-                          variant={userVotes[term.id] === "abstain" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleVote(term.id, "abstain")}
-                          className={userVotes[term.id] === "abstain" ? "bg-gray-600 hover:bg-gray-700" : ""}
-                          disabled={voteMutation.isPending}
-                        >
-                          Abstain
-                        </Button>
+                        {canUserVote() ? (
+                          <>
+                            <Button 
+                              variant={userVotes[term.id] === "yes" ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handleVote(term.id, "yes")}
+                              className={userVotes[term.id] === "yes" ? "bg-green-600 hover:bg-green-700" : ""}
+                              disabled={voteMutation.isPending}
+                            >
+                              Yes
+                            </Button>
+                            <Button 
+                              variant={userVotes[term.id] === "no" ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handleVote(term.id, "no")}
+                              className={userVotes[term.id] === "no" ? "bg-red-600 hover:bg-red-700" : ""}
+                              disabled={voteMutation.isPending}
+                            >
+                              No
+                            </Button>
+                            <Button 
+                              variant={userVotes[term.id] === "abstain" ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => handleVote(term.id, "abstain")}
+                              className={userVotes[term.id] === "abstain" ? "bg-gray-600 hover:bg-gray-700" : ""}
+                              disabled={voteMutation.isPending}
+                            >
+                              Abstain
+                            </Button>
+                          </>
+                        ) : (
+                          <div className="text-sm text-amber-400">You cannot vote on this term</div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -469,6 +536,86 @@ const ContractDetail = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="proposals" className="space-y-6 mt-6">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Proposals & Suggestions</h2>
+              <p className="text-gray-300 text-sm mb-6">
+                Submit proposals or suggestions related to this contract. All members can submit proposals.
+              </p>
+              
+              {user ? (
+                <form onSubmit={handleProposalSubmit} className="mb-6">
+                  <div className="space-y-4">
+                    <div>
+                      <textarea 
+                        className="w-full bg-sidebar border border-sidebar-border rounded-md p-3 text-white" 
+                        rows={4}
+                        placeholder="Write your proposal or suggestion here..."
+                        value={proposalContent}
+                        onChange={(e) => setProposalContent(e.target.value)}
+                      ></textarea>
+                    </div>
+                    <div className="flex justify-end">
+                      <Button 
+                        type="submit" 
+                        disabled={!proposalContent.trim() || proposalMutation.isPending}
+                      >
+                        Submit Proposal
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              ) : (
+                <div className="bg-sidebar-border rounded-md p-4 mb-6">
+                  <p className="text-center text-gray-300">You need to be logged in to submit proposals.</p>
+                </div>
+              )}
+              
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-white">Recent Proposals</h3>
+                
+                <div className="space-y-4">
+                  {/* We would map through real proposals here once implemented */}
+                  <div className="border border-sidebar-border rounded-md p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-sm">JD</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <span className="font-medium text-white">John Doe</span>
+                          <span className="text-xs text-gray-400">2 days ago</span>
+                        </div>
+                        <p className="text-gray-300 mt-2">
+                          I propose we extend the delivery timeline by an additional 
+                          week to account for potential shipping delays.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="border border-sidebar-border rounded-md p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-sm">AS</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <span className="font-medium text-white">Alice Smith</span>
+                          <span className="text-xs text-gray-400">3 days ago</span>
+                        </div>
+                        <p className="text-gray-300 mt-2">
+                          Can we include a clause about quality assurance testing before 
+                          final acceptance of the products?
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Card>
           </TabsContent>
