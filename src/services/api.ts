@@ -9,12 +9,19 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const payloadCmsUrl = import.meta.env.VITE_PAYLOAD_CMS_URL || 'http://localhost:3000';
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client only if URL is available
+export const supabase = supabaseUrl 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 // User authentication and management
 export const auth = {
   signIn: async (email: string) => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+      }
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -32,6 +39,10 @@ export const auth = {
   
   verifyOtp: async (email: string, token: string) => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+      }
+      
       const { data, error } = await supabase.auth.verifyOtp({
         email,
         token,
@@ -48,6 +59,10 @@ export const auth = {
   
   signOut: async () => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+      }
+      
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       return { success: true };
@@ -59,6 +74,10 @@ export const auth = {
   
   getCurrentUser: async () => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+      }
+      
       const { data, error } = await supabase.auth.getUser();
       if (error) throw error;
       return { success: true, data };
