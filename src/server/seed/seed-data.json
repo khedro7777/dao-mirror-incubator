@@ -1,0 +1,105 @@
+
+{
+  "users": [
+    {
+      "email": "admin@mirrordao.com",
+      "password": "$2a$10$AUPr1Rc9xbx.dKi6hE1qduQQMqrnIUYxPStKkUSROMAOxrRpUcQhm", 
+      "fullName": "Admin User",
+      "roles": ["supplier", "investor", "freelancer"],
+      "kycStatus": "verified"
+    },
+    {
+      "email": "supplier@example.com",
+      "password": "$2a$10$AUPr1Rc9xbx.dKi6hE1qduQQMqrnIUYxPStKkUSROMAOxrRpUcQhm", 
+      "fullName": "Supplier User",
+      "roles": ["supplier"],
+      "kycStatus": "verified"
+    },
+    {
+      "email": "investor@example.com",
+      "password": "$2a$10$AUPr1Rc9xbx.dKi6hE1qduQQMqrnIUYxPStKkUSROMAOxrRpUcQhm", 
+      "fullName": "Investor User",
+      "roles": ["investor"],
+      "kycStatus": "verified"
+    },
+    {
+      "email": "freelancer@example.com",
+      "password": "$2a$10$AUPr1Rc9xbx.dKi6hE1qduQQMqrnIUYxPStKkUSROMAOxrRpUcQhm", 
+      "fullName": "Freelancer User",
+      "roles": ["freelancer"],
+      "kycStatus": "verified"
+    }
+  ],
+  "contracts": [
+    {
+      "title": "Office Supplies Group Purchase",
+      "description": "Joint purchase of office supplies for Q3 2023. Looking for 5 more participants to reach volume discount.",
+      "type": "group-buying",
+      "category": "Office Supplies",
+      "creator": 2,
+      "creatorRole": "supplier",
+      "status": "active",
+      "startDate": "2023-05-15T00:00:00.000Z",
+      "endDate": "2023-06-15T00:00:00.000Z",
+      "isWeb3": false
+    },
+    {
+      "title": "Mobile App Development",
+      "description": "Seeking funding for final development phase of our innovative mobile application.",
+      "type": "funding",
+      "category": "Technology",
+      "creator": 3,
+      "creatorRole": "investor",
+      "status": "active",
+      "startDate": "2023-05-20T00:00:00.000Z",
+      "endDate": "2023-06-20T00:00:00.000Z",
+      "isWeb3": false
+    },
+    {
+      "title": "Website Redesign Project",
+      "description": "Professional UI/UX designer needed for complete website redesign. 3-week project.",
+      "type": "freelance",
+      "category": "Design",
+      "creator": 4,
+      "creatorRole": "freelancer",
+      "status": "pending",
+      "startDate": "2023-05-25T00:00:00.000Z",
+      "endDate": "2023-06-25T00:00:00.000Z",
+      "isWeb3": false
+    }
+  ],
+  "contract-terms": [
+    {
+      "content": "All participants agree to purchase a minimum of 100 units each",
+      "contract": 1,
+      "status": "approved",
+      "yesVotes": 12,
+      "noVotes": 2,
+      "abstainVotes": 1
+    },
+    {
+      "content": "Payment terms: Net 30 from delivery date",
+      "contract": 1,
+      "status": "approved",
+      "yesVotes": 10,
+      "noVotes": 3,
+      "abstainVotes": 2
+    },
+    {
+      "content": "Supplier will offer a 15% discount if total order exceeds 500 units",
+      "contract": 1,
+      "status": "approved",
+      "yesVotes": 14,
+      "noVotes": 1,
+      "abstainVotes": 0
+    },
+    {
+      "content": "All items will be delivered within 14 days of order confirmation",
+      "contract": 1,
+      "status": "rejected",
+      "yesVotes": 7,
+      "noVotes": 8,
+      "abstainVotes": 0
+    }
+  ]
+}

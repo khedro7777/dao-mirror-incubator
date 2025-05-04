@@ -1,7 +1,9 @@
 
 import React, { useState } from "react";
-import { Menu, Bell, ChevronDown } from "lucide-react";
+import { Menu, Bell, ChevronDown, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface HeaderProps {
   setIsSidebarOpen: (open: boolean) => void;
@@ -10,6 +12,13 @@ interface HeaderProps {
 const Header = ({ setIsSidebarOpen }: HeaderProps) => {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const { language, setLanguage } = useLanguage();
+  const { t } = useTranslation();
+
+  const handleLanguageChange = (lang: "en" | "ar") => {
+    setLanguage(lang);
+    setLanguageOpen(false);
+  };
 
   return (
     <header className="bg-sidebar shadow-md border-b border-sidebar-border">
@@ -29,7 +38,7 @@ const Header = ({ setIsSidebarOpen }: HeaderProps) => {
                 href="/"
                 className="flex-shrink-0 text-xl font-bold text-white"
               >
-                Mirror DAO
+                {t('appName')}
               </a>
             </div>
           </div>
@@ -38,45 +47,36 @@ const Header = ({ setIsSidebarOpen }: HeaderProps) => {
             <div className="relative ml-3">
               <button
                 type="button"
-                className="flex items-center text-sm text-gray-300 hover:text-white focus:outline-none"
+                className="flex items-center text-sm text-gray-300 hover:text-white focus:outline-none gap-1"
                 onClick={() => setLanguageOpen(!languageOpen)}
               >
-                <span>EN</span>
+                <Globe className="h-4 w-4" />
+                <span>{language.toUpperCase()}</span>
                 <ChevronDown className="ml-1 h-4 w-4" />
               </button>
               
               {languageOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5">
+                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 z-50">
                   <div 
                     className="py-1" 
                     role="menu" 
                     aria-orientation="vertical" 
                     aria-labelledby="language-menu"
                   >
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-sidebar-accent hover:text-white"
+                    <button
+                      className={`block w-full text-left px-4 py-2 text-sm ${language === 'en' ? 'bg-sidebar-accent text-white' : 'text-gray-300 hover:bg-sidebar-accent hover:text-white'}`}
                       role="menuitem"
-                      onClick={() => setLanguageOpen(false)}
+                      onClick={() => handleLanguageChange('en')}
                     >
                       English
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-sidebar-accent hover:text-white"
+                    </button>
+                    <button
+                      className={`block w-full text-left px-4 py-2 text-sm ${language === 'ar' ? 'bg-sidebar-accent text-white' : 'text-gray-300 hover:bg-sidebar-accent hover:text-white'}`}
                       role="menuitem"
-                      onClick={() => setLanguageOpen(false)}
+                      onClick={() => handleLanguageChange('ar')}
                     >
-                      Spanish
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-sidebar-accent hover:text-white"
-                      role="menuitem"
-                      onClick={() => setLanguageOpen(false)}
-                    >
-                      French
-                    </a>
+                      العربية
+                    </button>
                   </div>
                 </div>
               )}
@@ -94,7 +94,7 @@ const Header = ({ setIsSidebarOpen }: HeaderProps) => {
               </button>
               
               {notificationsOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5">
+                <div className="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 z-50">
                   <div className="py-2 px-3 border-b border-sidebar-border">
                     <h3 className="text-sm font-medium text-white">Notifications</h3>
                   </div>
