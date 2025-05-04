@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { auth, api } from "@/services/api";
+import { auth, users } from "@/services";
 
 interface User {
   id: string;
@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (success && data.user) {
           // Fetch additional user profile data from Payload CMS
-          const userProfile = await api.getUserProfile(data.user.id);
+          const userProfile = await users.getUserProfile(data.user.id);
           
           if (userProfile.success) {
             setUser({
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (result.success && result.data.user) {
         // Fetch additional user profile data from Payload CMS
-        const userProfile = await api.getUserProfile(result.data.user.id);
+        const userProfile = await users.getUserProfile(result.data.user.id);
         
         if (userProfile.success) {
           setUser({
@@ -142,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setLoading(true);
       setError(null);
-      const result = await api.updateUserProfile(user.id, userData);
+      const result = await users.updateUserProfile(user.id, userData);
       
       if (result.success) {
         setUser((prevUser) => prevUser ? { ...prevUser, ...userData } : null);
