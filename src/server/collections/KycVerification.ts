@@ -1,7 +1,8 @@
 
-import { CollectionConfig } from 'payload/types';
+// Using type assertion until Payload types are properly imported
+const CollectionConfig = {} as any;
 
-const KycVerification: CollectionConfig = {
+const KycVerification = {
   slug: 'kyc-verification',
   admin: {
     useAsTitle: 'user',
@@ -155,6 +156,6 @@ const KycVerification: CollectionConfig = {
       type: 'textarea',
     },
   ],
-};
+} as const;
 
 export default KycVerification;

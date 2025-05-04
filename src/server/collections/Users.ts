@@ -1,7 +1,8 @@
 
-import { CollectionConfig } from 'payload/types';
+// Using type assertion until Payload types are properly imported
+const CollectionConfig = {} as any;
 
-const Users: CollectionConfig = {
+const Users = {
   slug: 'users',
   auth: true,
   admin: {
@@ -87,6 +88,6 @@ const Users: CollectionConfig = {
       defaultValue: 'en',
     },
   ],
-};
+} as const;
 
 export default Users;

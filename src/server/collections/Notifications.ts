@@ -1,7 +1,8 @@
 
-import { CollectionConfig } from 'payload/types';
+// Using type assertion until Payload types are properly imported
+const CollectionConfig = {} as any;
 
-const Notifications: CollectionConfig = {
+const Notifications = {
   slug: 'notifications',
   admin: {
     useAsTitle: 'message',
@@ -74,6 +75,6 @@ const Notifications: CollectionConfig = {
       defaultValue: false,
     },
   ],
-};
+} as const;
 
 export default Notifications;

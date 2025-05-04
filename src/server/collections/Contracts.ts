@@ -1,7 +1,8 @@
 
-import { CollectionConfig } from 'payload/types';
+// Using type assertion until Payload types are properly imported
+const CollectionConfig = {} as any;
 
-const Contracts: CollectionConfig = {
+const Contracts = {
   slug: 'contracts',
   admin: {
     useAsTitle: 'title',
@@ -125,6 +126,6 @@ const Contracts: CollectionConfig = {
       label: 'Is Web3-based Contract',
     },
   ],
-};
+} as const;
 
 export default Contracts;

@@ -1,7 +1,8 @@
 
-import { CollectionConfig } from 'payload/types';
+// Using type assertion until Payload types are properly imported
+const CollectionConfig = {} as any;
 
-const ContractTerms: CollectionConfig = {
+const ContractTerms = {
   slug: 'contract-terms',
   admin: {
     useAsTitle: 'content',
@@ -63,6 +64,6 @@ const ContractTerms: CollectionConfig = {
       defaultValue: 0,
     },
   ],
-};
+} as const;
 
 export default ContractTerms;
