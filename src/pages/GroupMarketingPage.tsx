@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import ProposalCard from "@/components/cards/ProposalCard";
@@ -264,7 +263,7 @@ const GroupMarketingPage = () => {
           <div className="flex justify-between">
             <div>
               <p className="text-gray-400 text-sm">Closed Contracts</p>
-              <p className="text-2xl font-bold text-white">{contracts.filter(c => c.status === 'Closed').length || 0}</p>
+              <p className="text-2xl font-bold text-white">{contracts.filter(c => c.status === 'Closed' as 'Active' | 'Pending' | 'Closed').length || 0}</p>
             </div>
             <div className="h-10 w-10 bg-blue-500/20 rounded-full flex items-center justify-center">
               <Megaphone className="h-5 w-5 text-blue-500" />

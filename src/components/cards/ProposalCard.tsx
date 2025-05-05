@@ -64,7 +64,7 @@ const ProposalCard = ({
   };
 
   return (
-    <div className={cn("proposal-card", className)}>
+    <div className={cn("proposal-card rounded-lg border border-slate-700 bg-slate-800 p-5", className)}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           <span className="text-xs font-medium px-2 py-1 rounded-full bg-sidebar-accent text-gray-300">
