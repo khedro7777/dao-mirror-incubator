@@ -1,4 +1,3 @@
-
 export const translations = {
   en: {
     // Common
@@ -103,6 +102,34 @@ export const translations = {
     // Error
     pageNotFound: "Oops! Page not found",
     returnToHome: "Return to Home",
+    
+    // Arbitration Center keys
+    arbitration: "Arbitration Center",
+    arbitrationDescription: "Transparent and fair resolution for all contract disputes",
+    fileCase: "File a Case",
+    caseDetails: "Case Details",
+    viewAllCases: "View All Cases",
+    disputeResolution: "Dispute Resolution",
+    caseTitle: "Case Title",
+    caseId: "Case ID",
+    filedOn: "Filed On",
+    parties: "Parties",
+    status: "Status",
+    inProgress: "In Progress",
+    scheduled: "Scheduled",
+    resolved: "Resolved",
+    cancelled: "Cancelled",
+    arbitrator: "Arbitrator",
+    outcome: "Outcome",
+    rules: "Rules & Procedures",
+    evidence: "Evidence",
+    supportingDocuments: "Supporting Documents",
+    uploadEvidence: "Upload Evidence",
+    respondent: "Respondent",
+    filesAccepted: "Accepts PDF, DOC, JPG, PNG files",
+    agreeToBind: "I agree to be bound by the decision",
+    submitCase: "Submit Case",
+    saveDraft: "Save Draft",
   },
   ar: {
     // Common
@@ -112,7 +139,7 @@ export const translations = {
     
     // Roles
     joinAsSupplier: "انضم كمورّد",
-    joinAsInvestor: "انضم كمستثمر",
+    joinAsInvestor: "انض�� كمستثمر",
     joinAsFreelancer: "انضم كمستقل",
     supplierDesc: "الوصول إلى صفقات B2B المفتوحة والتعاون مع المشترين للشراء الجماعي",
     investorDesc: "اكتشف طلبات التمويل المُتحقق منها وساهم في المشاريع الواعدة",
@@ -202,12 +229,42 @@ export const translations = {
     // Footer
     about: "من نحن",
     contact: "اتصل بنا",
-    faq: "الأسئلة الشائعة",
+    faq: "الأسئل�� الشائعة",
     
     // Error
     pageNotFound: "عذراً! الصفحة غير موجودة",
     returnToHome: "العودة إلى الرئيسية",
-  }
+    
+    // Arabic Arbitration Center keys
+    arbitration: "مركز التحكيم",
+    arbitrationDescription: "حل عادل وشفاف لجميع نزاعات العقود",
+    fileCase: "تقديم قضية",
+    caseDetails: "تفاصيل القضية",
+    viewAllCases: "عرض جميع القضايا",
+    disputeResolution: "حل النزاعات",
+    caseTitle: "عنوان القضية",
+    caseId: "رقم القضية",
+    filedOn: "تاريخ التقديم",
+    parties: "الأطراف",
+    status: "الحالة",
+    inProgress: "قيد النظر",
+    scheduled: "مجدولة",
+    resolved: "محلولة",
+    cancelled: "ملغاة",
+    arbitrator: "المحكم",
+    outcome: "النتيجة",
+    rules: "القواعد والإجراءات",
+    evidence: "الأدلة",
+    supportingDocuments: "المستندات الداعمة",
+    uploadEvidence: "رفع الأدلة",
+    respondent: "المدعى عليه",
+    filesAccepted: "يقبل ملفات PDF، DOC، JPG، PNG",
+    agreeToBind: "أوافق على الالتزام بالقرار",
+    submitCase: "تقديم القضية",
+    saveDraft: "حفظ المسودة",
+  },
+  
+  // ... keep any other languages you have
 };
 
 export type LanguageKey = keyof typeof translations.en;

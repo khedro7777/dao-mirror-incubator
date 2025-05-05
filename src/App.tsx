@@ -17,6 +17,7 @@ import ContactUs from "./pages/ContactUs";
 import Faq from "./pages/Faq";
 import VotingPage from "./pages/VotingPage";
 import ProposalsPage from "./pages/ProposalsPage";
+import ArbitrationPage from "./pages/ArbitrationPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/faq" element={<Faq />} />
               <Route path="/voting" element={<VotingPage />} />
               <Route path="/proposals" element={<ProposalsPage />} />
+              <Route path="/arbitration" element={<ArbitrationPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

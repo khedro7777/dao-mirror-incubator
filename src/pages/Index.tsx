@@ -5,7 +5,9 @@ import RoleCard from "@/components/cards/RoleCard";
 import GatewayCard from "@/components/cards/GatewayCard";
 import ProposalCard from "@/components/cards/ProposalCard";
 import KycStatusCard from "@/components/cards/KycStatusCard";
-import { Users, ShoppingBag, FileText } from "lucide-react";
+import ArbitrationCard from "@/components/cards/ArbitrationCard";
+import { Users, ShoppingBag, FileText, Scale } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 const Index = () => {
   // Sample data for role cards
@@ -101,8 +103,31 @@ const Index = () => {
     },
   ] as const;
 
+  // Sample arbitration cases
+  const arbitrationCases = [
+    {
+      id: "ARB-2023-001",
+      title: "Payment Dispute - Software Development",
+      parties: ["TechCorp", "CodeDevelopers LLC"],
+      status: "In Progress",
+      filed: "May 10, 2023",
+      category: "Payment",
+      description: "Dispute regarding milestone payments for software development project."
+    },
+    {
+      id: "ARB-2023-002",
+      title: "Contract Terms Violation",
+      parties: ["GlobalSupply Inc.", "LocalBuyers Group"],
+      status: "Scheduled",
+      filed: "May 15, 2023",
+      category: "Contract Terms",
+      description: "Alleged violation of agreed terms in group buying contract."
+    }
+  ];
+
   return (
     <Layout>
+      {/* ==== HEADER SECTION ==== */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Welcome to Mirror DAO</h1>
         <p className="text-gray-300">
@@ -110,12 +135,12 @@ const Index = () => {
         </p>
       </div>
 
-      {/* KYC Status Section */}
+      {/* ==== KYC STATUS SECTION ==== */}
       <section className="mb-10">
         <KycStatusCard status="Not Started" />
       </section>
 
-      {/* Role Cards Section */}
+      {/* ==== ROLE CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Get Started</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -132,7 +157,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Gateway Cards Section */}
+      {/* ==== GATEWAY CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Explore Gateways</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -148,7 +173,41 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Hot Contracts Section */}
+      {/* ==== ARBITRATION CENTER SECTION ==== */}
+      <section className="mb-10">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-white">Arbitration Center</h2>
+          <a href="/arbitration" className="text-primary hover:text-primary/80 font-medium">
+            View All Cases
+          </a>
+        </div>
+        
+        <Card className="p-6 mb-6 border-primary/30">
+          <div className="flex items-center gap-3 mb-4">
+            <Scale className="h-6 w-6 text-primary" />
+            <h3 className="text-xl font-semibold text-white">Dispute Resolution Services</h3>
+          </div>
+          <p className="text-gray-300 mb-4">
+            Our arbitration center offers fair and efficient resolution for contract disputes through our panel of expert arbitrators. All decisions are binding and enforced through smart contracts.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            {arbitrationCases.map((item) => (
+              <ArbitrationCard
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                parties={item.parties}
+                status={item.status}
+                filed={item.filed}
+                category={item.category}
+                description={item.description}
+              />
+            ))}
+          </div>
+        </Card>
+      </section>
+
+      {/* ==== HOT CONTRACTS SECTION ==== */}
       <section>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-white">Hot Contracts Now</h2>
