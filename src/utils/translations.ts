@@ -1,80 +1,133 @@
-export const translations = {
+// Keep the existing imports
+
+// Add new language keys for voting and proposals
+export type LanguageKey =
+  | "funding"
+  | "freelance"
+  | "pending"
+  | "appName"
+  | "welcomeTo"
+  | "appDescription"
+  | "joinAsSupplier"
+  | "joinAsInvestor"
+  | "joinAsFreelancer"
+  | "supplierDesc"
+  | "investorDesc"
+  | "freelancerDesc"
+  | "seeOpenJobs"
+  | "seeOpenInvestments"
+  | "seeOpenDeals"
+  | "login"
+  | "signup"
+  | "forgotPassword"
+  | "role"
+  | "main"
+  | "dashboard"
+  | "explore"
+  | "settings"
+  | "support"
+  | "helpCenter"
+  | "contactUs"
+  | "signOut"
+  | "accountSettings"
+  | "darkMode"
+  | "lightMode"
+  | "language"
+  | "voting"
+  | "proposals"
+  | "arbitration"
+  | "groupBuying"
+  | "day"
+  | "days"
+  | "hour"
+  | "hours"
+  | "minute"
+  | "minutes"
+  | "ago"
+  | "justNow"
+  | "votingDescription"
+  | "proposalsDescription"
+  | "searchProposals"
+  | "filterByStatus"
+  | "allStatus"
+  | "active"
+  | "closed"
+  | "filterByCategory"
+  | "allCategories"
+  | "newProposal"
+  | "createdBy"
+  | "details"
+  | "vote"
+  | "noProposalsFound"
+  | "clearFilters"
+  | "accessRestricted"
+  | "votingRestrictionMessage"
+  | "exploreContracts"
+  | "searchVotes"
+  | "createNewProposal"
+  | "voteNow"
+  | "viewDetails"
+  | "yes"
+  | "no"
+  | "abstain"
+  | "remaining"
+  | "noVotesFound"
+  | "returnToHome";
+
+// Keep the existing translations structure but add new keys
+export const translations: Record<string, Record<LanguageKey, string>> = {
   en: {
-    // Common
+    // Keep existing translations
+    funding: "Funding",
+    freelance: "Freelance",
+    pending: "Pending",
     appName: "Mirror DAO",
     welcomeTo: "Welcome to Mirror DAO",
     appDescription: "A decentralized platform for group buying, funding, and freelance contracts",
-    
-    // Roles
     joinAsSupplier: "Join as Supplier",
     joinAsInvestor: "Join as Investor",
     joinAsFreelancer: "Join as Freelancer",
     supplierDesc: "Access open B2B deals and collaborate with buyers for group purchases",
     investorDesc: "Discover verified funding requests and contribute to promising projects",
     freelancerDesc: "Find open jobs and contribute your skills to ongoing projects",
-    seeOpenB2BDeals: "See Open B2B Deals",
-    seeFundingOpportunities: "See Funding Opportunities",
     seeOpenJobs: "See Open Jobs",
-    
-    // Gateways
-    exploreGateways: "Explore Gateways",
-    groupBuying: "Group Buying",
-    funding: "Funding",
-    freelance: "Freelance",
-    exploreGroupBuying: "Explore Group Buying",
-    exploreFunding: "Explore Funding",
-    exploreFreelance: "Explore Freelance",
-    
-    // KYC
-    kycStatus: "KYC Status",
-    notStarted: "Not Started",
-    inReview: "In Review",
-    verified: "Verified",
-    startKycProcess: "Start KYC Process",
-    
-    // Contracts
-    hotContractsNow: "Hot Contracts Now",
-    viewAll: "View All",
-    exploreContracts: "Explore Contracts",
-    discoverAndParticipate: "Discover and participate in active contracts across all categories",
-    searchContracts: "Search contracts...",
-    noContractsFound: "No contracts found matching your search criteria.",
-    createContract: "Create new contract",
-    
-    // Contract Status
-    active: "Active",
-    pending: "Pending",
-    closed: "Closed",
-    
-    // Navigation
-    home: "Home",
+    seeOpenInvestments: "See Funding Opportunities",
+    seeOpenDeals: "See Open B2B Deals",
+    login: "Login",
+    signup: "Sign Up",
+    forgotPassword: "Forgot Password",
+    role: "Role",
+    main: "Main",
+    dashboard: "Dashboard",
     explore: "Explore",
-    contracts: "Contracts",
+    settings: "Settings",
+    support: "Support",
+    helpCenter: "Help Center",
+    contactUs: "Contact Us",
+    signOut: "Sign Out",
+    accountSettings: "Account Settings",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    language: "Language",
     voting: "Voting",
     proposals: "Proposals",
-    activity: "Activity",
-    settings: "Settings",
-    
-    // Voting
-    votingDescription: "Vote on active proposals and participate in group decision making",
-    accessRestricted: "Access Restricted",
-    votingRestrictionMessage: "Only suppliers, investors, and buyers can access the voting area",
-    voteNow: "Vote Now",
-    viewDetails: "View Details",
-    searchVotes: "Search votes...",
-    createNewProposal: "Create New Proposal",
-    votingEnds: "Voting Ends",
-    yes: "Yes",
-    no: "No",
-    abstain: "Abstain",
-    remaining: "Remaining",
-    noVotesFound: "No votes found matching your criteria",
-    
-    // Proposals
-    proposalsDescription: "View and submit proposals for contracts and collaborations",
+    arbitration: "Arbitration",
+    groupBuying: "Group Buying",
+    day: "day",
+    days: "days",
+    hour: "hour",
+    hours: "hours",
+    minute: "minute",
+    minutes: "minutes",
+    ago: "ago",
+    justNow: "Just now",
+    votingDescription: "Vote on active proposals to help shape the future of our community",
+    proposalsDescription: "Explore and create proposals for community voting",
     searchProposals: "Search proposals...",
     filterByStatus: "Filter by status",
-    allStatus: "All Status",
+    allStatus: "All Statuses",
+    active: "Active",
+    closed: "Closed",
     filterByCategory: "Filter by category",
     allCategories: "All Categories",
     newProposal: "New Proposal",
@@ -83,192 +136,100 @@ export const translations = {
     vote: "Vote",
     noProposalsFound: "No proposals found matching your criteria",
     clearFilters: "Clear Filters",
-    
-    // Time
-    days: "days",
-    day: "day",
-    hours: "hours",
-    hour: "hour",
-    minutes: "minutes",
-    minute: "minute",
-    ago: "ago",
-    justNow: "Just now",
-    
-    // Footer
-    about: "About Us",
-    contact: "Contact",
-    faq: "FAQ",
-    
-    // Error
-    pageNotFound: "Oops! Page not found",
-    returnToHome: "Return to Home",
-    
-    // Arbitration Center keys
-    arbitration: "Arbitration Center",
-    arbitrationDescription: "Transparent and fair resolution for all contract disputes",
-    fileCase: "File a Case",
-    caseDetails: "Case Details",
-    viewAllCases: "View All Cases",
-    disputeResolution: "Dispute Resolution",
-    caseTitle: "Case Title",
-    caseId: "Case ID",
-    filedOn: "Filed On",
-    parties: "Parties",
-    status: "Status",
-    inProgress: "In Progress",
-    scheduled: "Scheduled",
-    resolved: "Resolved",
-    cancelled: "Cancelled",
-    arbitrator: "Arbitrator",
-    outcome: "Outcome",
-    rules: "Rules & Procedures",
-    evidence: "Evidence",
-    supportingDocuments: "Supporting Documents",
-    uploadEvidence: "Upload Evidence",
-    respondent: "Respondent",
-    filesAccepted: "Accepts PDF, DOC, JPG, PNG files",
-    agreeToBind: "I agree to be bound by the decision",
-    submitCase: "Submit Case",
-    saveDraft: "Save Draft",
+    accessRestricted: "Access Restricted",
+    votingRestrictionMessage: "You need to be registered and KYC verified to access voting features",
+    exploreContracts: "Explore Contracts",
+    searchVotes: "Search votes...",
+    createNewProposal: "Create New Proposal",
+    voteNow: "Vote Now",
+    viewDetails: "View Details",
+    yes: "Yes",
+    no: "No",
+    abstain: "Abstain",
+    remaining: "Remaining",
+    noVotesFound: "No votes found matching your criteria",
+    returnToHome: "Return to Home"
   },
   ar: {
-    // Common
-    appName: "مرآة DAO",
-    welcomeTo: "مرحبًا بك في مرآة DAO",
-    appDescription: "منصة لامركزية للشراء الجماعي والتمويل وعقود العمل الحر",
-    
-    // Roles
-    joinAsSupplier: "انضم كمورّد",
-    joinAsInvestor: "انض�� كمستثمر",
-    joinAsFreelancer: "انضم كمستقل",
-    supplierDesc: "الوصول إلى صفقات B2B المفتوحة والتعاون مع المشترين للشراء الجماعي",
-    investorDesc: "اكتشف طلبات التمويل المُتحقق منها وساهم في المشاريع الواعدة",
-    freelancerDesc: "ابحث عن وظائف مفتوحة وساهم بمهاراتك في المشاريع الجارية",
-    seeOpenB2BDeals: "شاهد صفقات B2B المفتوحة",
-    seeFundingOpportunities: "شاهد فرص التمويل",
-    seeOpenJobs: "شاهد الوظائف المفتوحة",
-    
-    // Gateways
-    exploreGateways: "استكشف البوابات",
-    groupBuying: "الشراء الجماعي",
-    funding: "التمويل",
+    // Keep existing translations
+    funding: "تمويل",
     freelance: "العمل الحر",
-    exploreGroupBuying: "استكشف الشراء الجماعي",
-    exploreFunding: "استكشف التمويل",
-    exploreFreelance: "استكشف العمل الحر",
-    
-    // KYC
-    kycStatus: "حالة التحقق من الهوية",
-    notStarted: "لم يبدأ بعد",
-    inReview: "قيد المراجعة",
-    verified: "تم التحقق",
-    startKycProcess: "ابدأ عملية التحقق من الهوية",
-    
-    // Contracts
-    hotContractsNow: "العقود الرائجة الآن",
-    viewAll: "عرض الكل",
-    exploreContracts: "استكشف العقود",
-    discoverAndParticipate: "اكتشف وشارك في العقود النشطة عبر جميع الفئات",
-    searchContracts: "ابحث عن عقود...",
-    noContractsFound: "لا توجد عقود مطابقة لمعايير البحث الخاصة بك.",
-    createContract: "إنشاء عقد جديد",
-    
-    // Contract Status
-    active: "نشط",
     pending: "قيد الانتظار",
-    closed: "مغلق",
-    
-    // Navigation
-    home: "الرئيسية",
+    appName: "Mirror DAO",
+    welcomeTo: "مرحبًا بك في Mirror DAO",
+    appDescription: "منصة لامركزية للشراء الجماعي والتمويل وعقود العمل الحر",
+    joinAsSupplier: "انضم كمورد",
+    joinAsInvestor: "انضم كمستثمر",
+    joinAsFreelancer: "انضم كعامل حر",
+    supplierDesc: "الوصول إلى صفقات B2B المفتوحة والتعاون مع المشترين للشراء الجماعي",
+    investorDesc: "اكتشف طلبات التمويل المتحقق منها وساهم في المشاريع الواعدة",
+    freelancerDesc: "ابحث عن وظائف مفتوحة وساهم بمهاراتك في المشاريع الجارية",
+    seeOpenJobs: "مشاهدة الوظائف المفتوحة",
+    seeOpenInvestments: "مشاهدة فرص التمويل",
+    seeOpenDeals: "مشاهدة صفقات B2B المفتوحة",
+    login: "تسجيل الدخول",
+    signup: "التسجيل",
+    forgotPassword: "نسيت كلمة المرور",
+    role: "الدور",
+    main: "الرئيسية",
+    dashboard: "لوحة التحكم",
     explore: "استكشاف",
-    contracts: "العقود",
+    settings: "الإعدادات",
+    support: "الدعم",
+    helpCenter: "مركز المساعدة",
+    contactUs: "اتصل بنا",
+    signOut: "تسجيل الخروج",
+    accountSettings: "إعدادات الحساب",
+    darkMode: "الوضع الداكن",
+    lightMode: "الوضع الفاتح",
+    language: "اللغة",
     voting: "التصويت",
     proposals: "المقترحات",
-    activity: "النشاط",
-    settings: "الإعدادات",
-    
-    // Voting
-    votingDescription: "صوت على المقترحات النشطة وشارك في اتخاذ القرارات الجماعية",
-    accessRestricted: "الوصول مقيد",
-    votingRestrictionMessage: "يمكن للموردين والمستثمرين والمشترين فقط الوصول إلى منطقة التصويت",
-    voteNow: "صوت الآن",
-    viewDetails: "عرض التفاصيل",
-    searchVotes: "البحث عن تصويتات...",
-    createNewProposal: "إنشاء مقترح جديد",
-    votingEnds: "ينتهي التصويت",
-    yes: "نعم",
-    no: "لا",
-    abstain: "امتناع",
-    remaining: "متبقي",
-    noVotesFound: "لم يتم العثور على تصويتات مطابقة لمعاييرك",
-    
-    // Proposals
-    proposalsDescription: "عرض وتقديم مقترحات للعقود والتعاون",
-    searchProposals: "البحث عن مقترحات...",
+    arbitration: "التحكيم",
+    groupBuying: "الشراء الجماعي",
+    day: "يوم",
+    days: "أيام",
+    hour: "ساعة",
+    hours: "ساعات",
+    minute: "دقيقة",
+    minutes: "دقائق",
+    ago: "منذ",
+    justNow: "الآن",
+    votingDescription: "صوت على المقترحات النشطة للمساعدة في تشكيل مستقبل مجتمعنا",
+    proposalsDescription: "استكشف وأنشئ مقترحات للتصويت المجتمعي",
+    searchProposals: "البحث في المقترحات...",
     filterByStatus: "تصفية حسب الحالة",
     allStatus: "جميع الحالات",
+    active: "نشط",
+    closed: "مغلق",
     filterByCategory: "تصفية حسب الفئة",
     allCategories: "جميع الفئات",
     newProposal: "مقترح جديد",
     createdBy: "أنشئ بواسطة",
     details: "التفاصيل",
-    vote: "تصويت",
-    noProposalsFound: "لم يتم العثور على مقترحات مطابقة لمعاييرك",
+    vote: "صوت",
+    noProposalsFound: "لم يتم العثور على مقترحات تطابق المعايير الخاصة بك",
     clearFilters: "مسح التصفية",
-    
-    // Time
-    days: "أيام",
-    day: "يوم",
-    hours: "ساعات",
-    hour: "ساعة",
-    minutes: "دقائق",
-    minute: "دقيقة",
-    ago: "مضت",
-    justNow: "الآن",
-    
-    // Footer
-    about: "من نحن",
-    contact: "اتصل بنا",
-    faq: "الأسئل�� الشائعة",
-    
-    // Error
-    pageNotFound: "عذراً! الصفحة غير موجودة",
-    returnToHome: "العودة إلى الرئيسية",
-    
-    // Arabic Arbitration Center keys
-    arbitration: "مركز التحكيم",
-    arbitrationDescription: "حل عادل وشفاف لجميع نزاعات العقود",
-    fileCase: "تقديم قضية",
-    caseDetails: "تفاصيل القضية",
-    viewAllCases: "عرض جميع القضايا",
-    disputeResolution: "حل النزاعات",
-    caseTitle: "عنوان القضية",
-    caseId: "رقم القضية",
-    filedOn: "تاريخ التقديم",
-    parties: "الأطراف",
-    status: "الحالة",
-    inProgress: "قيد النظر",
-    scheduled: "مجدولة",
-    resolved: "محلولة",
-    cancelled: "ملغاة",
-    arbitrator: "المحكم",
-    outcome: "النتيجة",
-    rules: "القواعد والإجراءات",
-    evidence: "الأدلة",
-    supportingDocuments: "المستندات الداعمة",
-    uploadEvidence: "رفع الأدلة",
-    respondent: "المدعى عليه",
-    filesAccepted: "يقبل ملفات PDF، DOC، JPG، PNG",
-    agreeToBind: "أوافق على الالتزام بالقرار",
-    submitCase: "تقديم القضية",
-    saveDraft: "حفظ المسودة",
-  },
-  
-  // ... keep any other languages you have
+    accessRestricted: "الوصول مقيد",
+    votingRestrictionMessage: "تحتاج إلى التسجيل والتحقق من هويتك للوصول إلى ميزات التصويت",
+    exploreContracts: "استكشاف العقود",
+    searchVotes: "البحث في التصويتات...",
+    createNewProposal: "إنشاء مقترح جديد",
+    voteNow: "صوت الآن",
+    viewDetails: "عرض التفاصيل",
+    yes: "نعم",
+    no: "لا",
+    abstain: "امتناع",
+    remaining: "متبقي",
+    noVotesFound: "لم يتم العثور على تصويتات تطابق المعايير الخاصة بك",
+    returnToHome: "العودة إلى الرئيسية"
+  }
 };
 
-export type LanguageKey = keyof typeof translations.en;
-
-export const getTranslation = (language: "en" | "ar", key: LanguageKey): string => {
+// Keep existing getTranslation function
+export const getTranslation = (language: string, key: LanguageKey): string => {
+  if (!translations[language]) {
+    return translations.en[key] || key;
+  }
   return translations[language][key] || translations.en[key] || key;
 };

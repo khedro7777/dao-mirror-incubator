@@ -1,5 +1,6 @@
 
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { getTranslation, LanguageKey } from "@/utils/translations";
 
 type Language = "en" | "ar";
 type Direction = "ltr" | "rtl";
@@ -8,6 +9,9 @@ interface LanguageContextType {
   language: Language;
   direction: Direction;
   setLanguage: (lang: Language) => void;
+  t: (key: LanguageKey) => string;
+  currentLanguage: Language;
+  changeLanguage: (lang: Language) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -24,6 +28,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   };
 
+  // Added changeLanguage as alias for setLanguage for compatibility
+  const changeLanguage = setLanguage;
+  
+  // Added t function for translation
+  const t = (key: LanguageKey): string => {
+    return getTranslation(language, key);
+  };
+
   useEffect(() => {
     const storedLanguage = localStorage.getItem("preferredLanguage") as Language | null;
     if (storedLanguage) {
@@ -32,7 +44,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   return (
-    <LanguageContext.Provider value={{ language, direction, setLanguage }}>
+    <LanguageContext.Provider value={{ 
+      language, 
+      direction, 
+      setLanguage,
+      t,
+      currentLanguage: language,
+      changeLanguage
+    }}>
       {children}
     </LanguageContext.Provider>
   );

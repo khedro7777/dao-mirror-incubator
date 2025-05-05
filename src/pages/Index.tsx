@@ -109,7 +109,7 @@ const Index = () => {
       id: "ARB-2023-001",
       title: "Payment Dispute - Software Development",
       parties: ["TechCorp", "CodeDevelopers LLC"],
-      status: "In Progress",
+      status: "In Progress" as const,
       filed: "May 10, 2023",
       category: "Payment",
       description: "Dispute regarding milestone payments for software development project."
@@ -118,7 +118,7 @@ const Index = () => {
       id: "ARB-2023-002",
       title: "Contract Terms Violation",
       parties: ["GlobalSupply Inc.", "LocalBuyers Group"],
-      status: "Scheduled",
+      status: "Scheduled" as const,
       filed: "May 15, 2023",
       category: "Contract Terms",
       description: "Alleged violation of agreed terms in group buying contract."

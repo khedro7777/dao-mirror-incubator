@@ -1,11 +1,19 @@
-
 import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import ProposalCard from "@/components/cards/ProposalCard";
-import { Search, ChevronDown, Filter, Calendar } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/hooks/useTranslation";
+import { Input } from "@/components/ui/input";
+import { 
+  Users, 
+  Search, 
+  Filter, 
+  Calendar, 
+  Tag, 
+  ChevronDown,
+  FileText 
+} from "lucide-react";
 
 /**
  * Explore Page Component

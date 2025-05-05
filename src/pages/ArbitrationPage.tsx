@@ -38,7 +38,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-001",
       title: "Payment Dispute - Software Development",
       parties: ["TechCorp", "CodeDevelopers LLC"],
-      status: "In Progress",
+      status: "In Progress" as const,
       filed: "May 10, 2023",
       category: "Payment",
       description: "Dispute regarding milestone payments for software development project."
@@ -47,7 +47,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-002",
       title: "Contract Terms Violation",
       parties: ["GlobalSupply Inc.", "LocalBuyers Group"],
-      status: "Scheduled",
+      status: "Scheduled" as const,
       filed: "May 15, 2023",
       category: "Contract Terms",
       description: "Alleged violation of agreed terms in group buying contract."
@@ -56,7 +56,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-003",
       title: "Quality of Deliverables Dispute",
       parties: ["MarketingFirm Co.", "DesignAgency LLC"],
-      status: "In Progress",
+      status: "In Progress" as const,
       filed: "May 5, 2023",
       category: "Deliverables",
       description: "Dispute over quality of marketing materials delivered for campaign."
@@ -65,7 +65,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-004",
       title: "Intellectual Property Claim",
       parties: ["Innovate Solutions", "TechStartup Inc."],
-      status: "Resolved",
+      status: "Resolved" as const,
       filed: "April 20, 2023",
       category: "IP Rights",
       description: "Settlement of IP ownership in jointly developed technology."
@@ -74,7 +74,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-005",
       title: "Late Delivery Penalty Dispute",
       parties: ["Logistics Partners", "Global Retail Chain"],
-      status: "Scheduled",
+      status: "Scheduled" as const,
       filed: "May 18, 2023",
       category: "Delivery Terms",
       description: "Dispute over late delivery penalties in supply chain contract."
@@ -83,7 +83,7 @@ const ArbitrationPage = () => {
       id: "ARB-2023-006",
       title: "Contract Cancellation Fees",
       parties: ["FashionBrands Group", "TextileSupplier Co."],
-      status: "Cancelled",
+      status: "Cancelled" as const,
       filed: "April 25, 2023",
       category: "Cancellation",
       description: "Dispute over contract cancellation fees for textile order."
