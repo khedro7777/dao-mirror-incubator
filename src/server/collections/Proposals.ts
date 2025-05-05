@@ -5,12 +5,17 @@ const CollectionConfig = {} as any;
 const Proposals = {
   slug: 'proposals',
   admin: {
-    useAsTitle: 'content',
+    useAsTitle: 'title',
   },
   access: {
     read: () => true,
   },
   fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
     {
       name: 'user',
       type: 'relationship',
@@ -29,6 +34,25 @@ const Proposals = {
       required: true,
     },
     {
+      name: 'deliverables',
+      type: 'array',
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'description',
+          type: 'textarea',
+        },
+        {
+          name: 'deadline',
+          type: 'date',
+        }
+      ],
+    },
+    {
       name: 'type',
       type: 'select',
       options: [
@@ -40,9 +64,31 @@ const Proposals = {
           label: 'Comment',
           value: 'comment',
         },
+        {
+          label: 'Service Offer',
+          value: 'service',
+        }
       ],
       defaultValue: 'proposal',
       required: true,
+    },
+    {
+      name: 'category',
+      type: 'select',
+      options: [
+        {
+          label: 'Group Buying',
+          value: 'group-buying',
+        },
+        {
+          label: 'Funding',
+          value: 'funding',
+        },
+        {
+          label: 'Freelance Service',
+          value: 'freelance',
+        }
+      ],
     },
     {
       name: 'status',
@@ -60,9 +106,41 @@ const Proposals = {
           label: 'Rejected',
           value: 'rejected',
         },
+        {
+          label: 'In Progress',
+          value: 'in-progress',
+        },
+        {
+          label: 'Completed',
+          value: 'completed',
+        }
       ],
       defaultValue: 'pending',
       required: true,
+    },
+    {
+      name: 'price',
+      type: 'number',
+      min: 0,
+    },
+    {
+      name: 'currency',
+      type: 'select',
+      options: [
+        {
+          label: 'USD',
+          value: 'usd',
+        },
+        {
+          label: 'EUR',
+          value: 'eur',
+        },
+        {
+          label: 'SAR',
+          value: 'sar',
+        },
+      ],
+      defaultValue: 'usd',
     },
     {
       name: 'timestamp',

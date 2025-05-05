@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { 
   Home, 
@@ -10,11 +9,15 @@ import {
   X,
   Info,
   MessageSquare,
-  HelpCircle
+  HelpCircle,
+  Search,
+  Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAuth } from "@/contexts/AuthContext";
+import { votingService } from "@/services/votingService";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,6 +27,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   const { direction } = useLanguage();
   const { t } = useTranslation();
+  const { user } = useAuth();
   
   // Close sidebar on route change or if screen size changes to desktop
   useEffect(() => {
@@ -40,14 +44,36 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
   }, [setIsOpen]);
 
   const closeSidebar = () => setIsOpen(false);
+  
+  // Check if user can vote
+  const canUserVote = () => {
+    if (!user || !user.roles) return false;
+    return votingService.canUserVote(user.roles[0]);
+  };
+  
+  // Check if user can submit proposals
+  const canUserSubmitProposal = () => {
+    if (!user || !user.roles) return false;
+    return votingService.canUserSubmitProposal(user.roles[0]);
+  };
 
   const navigation = [
     { name: t('home'), icon: Home, href: "/" },
-    { name: t('explore'), icon: Users, href: "/explore" },
+    { name: t('explore'), icon: Search, href: "/explore" },
     { name: t('contracts'), icon: FileText, href: "/contracts" },
-    { name: t('activity'), icon: Clock, href: "/activity" },
-    { name: t('settings'), icon: Settings, href: "/settings" },
   ];
+  
+  // Show voting option only if user can vote
+  if (canUserVote()) {
+    navigation.push({ name: t('voting'), icon: Users, href: "/voting" });
+  }
+  
+  // Show proposals for all users (but with different permissions)
+  navigation.push({ name: t('proposals'), icon: Mail, href: "/proposals" });
+  
+  // Other standard navigation items
+  navigation.push({ name: t('activity'), icon: Clock, href: "/activity" });
+  navigation.push({ name: t('settings'), icon: Settings, href: "/settings" });
 
   const gateways = [
     { name: t('groupBuying'), href: "/gateway/group-buying" },

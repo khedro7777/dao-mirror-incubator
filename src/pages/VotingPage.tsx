@@ -9,7 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useQuery } from "@tanstack/react-query";
-import { contracts, voting } from "@/services";
+import { contracts } from "@/services";
+import { votingService } from "@/services/votingService";
 import { useAuth } from "@/contexts/AuthContext"; 
 
 const VotingPage = () => {
@@ -22,11 +23,10 @@ const VotingPage = () => {
   // Check if user can vote and see voting section
   const canAccessVoting = () => {
     if (!user || !user.roles) return false;
-    const allowedRoles = ['supplier', 'investor', 'buyer'];
-    return user.roles.some(role => allowedRoles.includes(role));
+    return votingService.canUserVote(user.roles[0]);
   };
   
-  // Mock data for active votes
+  // Mock data for active votes - in production this would come from an API
   const activeVotes = [
     {
       id: "1",
@@ -77,7 +77,6 @@ const VotingPage = () => {
     if (!user || !user.roles) return [];
     
     return activeVotes.filter(vote => {
-      // Filter based on contract type
       if (user.roles.includes('supplier') || user.roles.includes('buyer')) {
         if (vote.contractType === 'group-buying') return true;
       }
@@ -101,21 +100,21 @@ const VotingPage = () => {
   return (
     <Layout>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Voting</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">{t('voting')}</h1>
         <p className="text-gray-300">
-          Cast your vote on active proposals and track voting progress
+          {t('votingDescription')}
         </p>
       </div>
 
       {!canAccessVoting() ? (
         <Card className="p-6">
           <div className="text-center py-8">
-            <h2 className="text-xl font-semibold text-white mb-4">Access Restricted</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">{t('accessRestricted')}</h2>
             <p className="text-gray-300 mb-6">
-              The voting section is only available for suppliers, investors, and buyers.
+              {t('votingRestrictionMessage')}
             </p>
             <Button onClick={() => navigate('/explore')}>
-              Explore Available Contracts
+              {t('exploreContracts')}
             </Button>
           </div>
         </Card>
@@ -124,7 +123,7 @@ const VotingPage = () => {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="w-full md:w-2/3">
               <Input 
-                placeholder="Search votes..." 
+                placeholder={t('searchVotes')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-sidebar border-sidebar-border text-white"
@@ -132,7 +131,9 @@ const VotingPage = () => {
             </div>
             <div className="w-full md:w-1/3">
               <div className="flex justify-end">
-                <Button>Create New Proposal</Button>
+                <Button onClick={() => navigate('/proposals')}>
+                  {t('createNewProposal')}
+                </Button>
               </div>
             </div>
           </div>
@@ -146,27 +147,27 @@ const VotingPage = () => {
                       <h2 className="text-xl font-semibold text-white">{vote.title}</h2>
                       <p className="text-gray-300">{vote.description}</p>
                       <div className="flex items-center gap-2 text-sm">
-                        <span className="text-gray-400">Voting ends:</span>
+                        <span className="text-gray-400">{t('votingEnds')}:</span>
                         <span className="text-white">{new Date(vote.votingEnds).toLocaleDateString()}</span>
                       </div>
                     </div>
                     
                     <div className="flex md:flex-col md:items-end gap-2 mt-2 md:mt-0">
                       <Button asChild>
-                        <a href={`/contracts/${vote.contractId}`}>Vote Now</a>
+                        <a href={`/contracts/${vote.contractId}`}>{t('voteNow')}</a>
                       </Button>
-                      <Button variant="outline">View Details</Button>
+                      <Button variant="outline">{t('viewDetails')}</Button>
                     </div>
                   </div>
                   
                   <div className="mt-6">
                     <div className="flex justify-between text-sm mb-2">
                       <div className="space-x-4">
-                        <span className="text-green-400">Yes: {vote.progress.yes}%</span>
-                        <span className="text-red-400">No: {vote.progress.no}%</span>
-                        <span className="text-gray-400">Abstain: {vote.progress.abstain}%</span>
+                        <span className="text-green-400">{t('yes')}: {vote.progress.yes}%</span>
+                        <span className="text-red-400">{t('no')}: {vote.progress.no}%</span>
+                        <span className="text-gray-400">{t('abstain')}: {vote.progress.abstain}%</span>
                       </div>
-                      <span className="text-gray-400">Remaining: {vote.progress.remaining}%</span>
+                      <span className="text-gray-400">{t('remaining')}: {vote.progress.remaining}%</span>
                     </div>
                     
                     <div className="h-2 w-full bg-sidebar-border rounded-full overflow-hidden">
@@ -181,7 +182,7 @@ const VotingPage = () => {
               ))
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-400">No voting proposals found matching your criteria.</p>
+                <p className="text-gray-400">{t('noVotesFound')}</p>
               </div>
             )}
           </div>
