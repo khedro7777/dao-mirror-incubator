@@ -1,251 +1,420 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { useTranslation } from "@/hooks/useTranslation";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { FileText, Upload, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { api } from "@/utils/api";
 
 const KycVerification = () => {
-  const { t } = useTranslation();
-  const [kycTab, setKycTab] = useState("individual");
-  const [step, setStep] = useState(1);
-  const [progress, setProgress] = useState(0);
-  
-  const totalSteps = 3;
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const [kycType, setKycType] = useState<"individual" | "business">("individual");
+  const [status, setStatus] = useState<
+    "not_started" | "in_progress" | "in_review" | "verified" | "rejected"
+  >("not_started");
+  const [fullName, setFullName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [businessAddress, setBusinessAddress] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [idDocument, setIdDocument] = useState<File | null>(null);
+  const [addressProof, setAddressProof] = useState<File | null>(null);
+  const [businessRegistration, setBusinessRegistration] = useState<File | null>(null);
+  const [otherDocument, setOtherDocument] = useState<File | null>(null);
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [kycData, setKycData] = useState<any>(null);
 
-  const handleNextStep = () => {
-    if (step < totalSteps) {
-      setStep(step + 1);
-      setProgress(((step + 1) / totalSteps) * 100);
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: "Not authenticated.",
+        description: "Please log in to access KYC verification.",
+        variant: "destructive",
+      });
+      navigate("/login");
     }
+  }, [user, navigate, toast]);
+
+  useEffect(() => {
+    const fetchKycData = async () => {
+      if (user) {
+        try {
+          const response = await api.get(`/api/kyc?userId=${user.id}`);
+          if (response.data) {
+            setKycData(response.data);
+            setKycType(response.data.type);
+            setStatus(response.data.status);
+
+            // Set personal info
+            setFullName(response.data.personalInfo?.fullName || "");
+            setDateOfBirth(response.data.personalInfo?.dateOfBirth || "");
+            setAddress(response.data.personalInfo?.address || "");
+            setPhoneNumber(response.data.personalInfo?.phoneNumber || "");
+
+            // Set business info
+            setCompanyName(response.data.businessInfo?.companyName || "");
+            setRegistrationNumber(response.data.businessInfo?.registrationNumber || "");
+            setBusinessAddress(response.data.businessInfo?.businessAddress || "");
+            setBusinessType(response.data.businessInfo?.businessType || "");
+          }
+        } catch (error) {
+          console.error("Error fetching KYC data:", error);
+          toast({
+            title: "Error",
+            description: "Failed to load KYC data.",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    fetchKycData();
+  }, [user, toast]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, setFile: (file: File | null) => void) => {
+    const file = event.target.files && event.target.files[0];
+    setFile(file || null);
   };
 
-  const handlePrevStep = () => {
-    if (step > 1) {
-      setStep(step - 1);
-      setProgress(((step - 1) / totalSteps) * 100);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!termsAgreed) {
+      toast({
+        title: "Agreement required.",
+        description: "Please agree to the terms and conditions.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append("userId", user.id);
+    formData.append("type", kycType);
+    formData.append("status", "in_progress"); // Set status to "in progress" upon submission
+    formData.append("termsAgreed", String(termsAgreed));
+
+    // Personal Info
+    formData.append("fullName", fullName);
+    formData.append("dateOfBirth", dateOfBirth);
+    formData.append("address", address);
+    formData.append("phoneNumber", phoneNumber);
+
+    // Business Info
+    formData.append("companyName", companyName);
+    formData.append("registrationNumber", registrationNumber);
+    formData.append("businessAddress", businessAddress);
+    formData.append("businessType", businessType);
+
+    // Documents
+    if (idDocument) formData.append("idDocument", idDocument);
+    if (addressProof) formData.append("addressProof", addressProof);
+    if (businessRegistration) formData.append("businessRegistration", businessRegistration);
+    if (otherDocument) formData.append("otherDocument", otherDocument);
+
+    try {
+      // Determine if it's an update or create operation
+      const url = kycData ? `/api/kyc/${kycData.id}` : "/api/kyc";
+      const method = kycData ? 'put' : 'post';
+
+      const response = await api[method](url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 200) {
+        toast({
+          title: "KYC Submission Successful",
+          description: "Your KYC information has been submitted for review.",
+        });
+        // Refresh KYC data
+        const updatedKycDataResponse = await api.get(`/api/kyc?userId=${user.id}`);
+        if (updatedKycDataResponse.data) {
+          setKycData(updatedKycDataResponse.data);
+          setStatus(updatedKycDataResponse.data.status);
+        }
+      } else {
+        toast({
+          title: "KYC Submission Failed",
+          description: "There was an error submitting your KYC information.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      console.error("KYC submission error:", error);
+      toast({
+        title: "KYC Submission Error",
+        description: error.message || "Failed to submit KYC data.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <Layout>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">{t('kycStatus')}</h1>
-        <p className="text-gray-300">
-          Complete your verification process to get full access to all features
+      <div className="container mx-auto mt-8 p-8 bg-secondary rounded shadow-md text-white">
+        <h1 className="text-2xl font-bold text-white mb-4">KYC Verification</h1>
+        <p className="mb-6">
+          Please complete the KYC verification process to access all features.
         </p>
-      </div>
 
-      <div className="mb-8">
-        <div className="bg-card rounded-lg p-6">
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-300">
-                {step === 1 ? "Personal Information" : step === 2 ? "Document Verification" : "Review & Submit"}
-              </span>
-              <span className="text-sm text-gray-300">
-                {step}/{totalSteps}
-              </span>
-            </div>
-            <Progress value={progress} className="h-2" />
+        {kycData && (
+          <div className="mb-6">
+            <h3 className="font-medium text-gray-400 mb-1">KYC Status</h3>
+            <p className={`font-semibold ${
+                status === "verified" ? "text-green-500" :
+                status === "rejected" ? "text-red-500" :
+                "text-yellow-500"
+              }`}>
+              {status === "not_started" ? "Not Started" :
+               status === "in_progress" ? "In Progress" :
+               status === "in_review" ? "In Review" :
+               status === "verified" ? "Verified" : "Rejected"}
+            </p>
+            {status === "rejected" && kycData.rejectionReason && (
+              <p className="text-red-400 mt-2">
+                Rejection Reason: {kycData.rejectionReason}
+              </p>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              KYC Type
+            </label>
+            <Select value={kycType} onValueChange={value => setKycType(value as "individual" | "business")}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select KYC Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="individual">Individual (KYCE)</SelectItem>
+                <SelectItem value="business">Business (KYCB)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          <Tabs defaultValue="individual" className="w-full" onValueChange={setKycTab}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="individual">Individual (KYCE)</TabsTrigger>
-              <TabsTrigger value="business">Business (KYCB)</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="individual" className="space-y-6">
-              {step === 1 && (
-                <div className="space-y-4">
-                  <Card className="p-6">
-                    <h3 className="text-lg font-medium mb-4">Personal Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Full Name
-                        </label>
-                        <input 
-                          type="text" 
-                          className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="Enter your full name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Date of Birth
-                        </label>
-                        <input 
-                          type="date" 
-                          className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Email Address
-                        </label>
-                        <input 
-                          type="email" 
-                          className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="Enter your email"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Phone Number
-                        </label>
-                        <input 
-                          type="tel" 
-                          className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="Enter your phone number"
-                        />
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Residential Address
-                        </label>
-                        <textarea 
-                          className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                          placeholder="Enter your address"
-                          rows={3}
-                        />
-                      </div>
-                    </div>
-                  </Card>
+          {/* Individual KYC Form */}
+          {kycType === "individual" && (
+            <Card className="p-4">
+              <h2 className="text-xl font-semibold text-white mb-4">
+                Personal Information
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Full Name
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
                 </div>
-              )}
-
-              {step === 2 && (
-                <div className="space-y-4">
-                  <Card className="p-6">
-                    <h3 className="text-lg font-medium mb-4">Document Verification</h3>
-                    
-                    <div className="space-y-6">
-                      <div className="border border-dashed border-gray-500 rounded-lg p-6 text-center">
-                        <FileText className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-                        <div className="text-sm font-medium text-gray-300 mb-1">
-                          Upload ID Document (Passport/ID Card)
-                        </div>
-                        <p className="text-xs text-gray-400 mb-4">
-                          Supported formats: JPG, PNG, PDF (max 5MB)
-                        </p>
-                        <Button className="flex items-center gap-2">
-                          <Upload className="h-4 w-4" />
-                          Upload Document
-                        </Button>
-                      </div>
-                      
-                      <div className="border border-dashed border-gray-500 rounded-lg p-6 text-center">
-                        <FileText className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-                        <div className="text-sm font-medium text-gray-300 mb-1">
-                          Upload Proof of Address
-                        </div>
-                        <p className="text-xs text-gray-400 mb-4">
-                          Utility bill, bank statement (not older than 3 months)
-                        </p>
-                        <Button className="flex items-center gap-2">
-                          <Upload className="h-4 w-4" />
-                          Upload Document
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Date of Birth
+                  </label>
+                  <Input
+                    type="date"
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
                 </div>
-              )}
-
-              {step === 3 && (
-                <div className="space-y-4">
-                  <Card className="p-6">
-                    <h3 className="text-lg font-medium mb-4">Review & Submit</h3>
-                    
-                    <div className="bg-sidebar-accent rounded-lg p-4 mb-6">
-                      <div className="flex items-center gap-2 text-white">
-                        <CheckCircle className="h-5 w-5 text-primary" />
-                        <span>All required information has been provided</span>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-300 mb-1">Personal Information</h4>
-                        <div className="bg-sidebar rounded-lg p-4">
-                          <p className="text-sm text-white">Full Name: John Doe</p>
-                          <p className="text-sm text-white">Date of Birth: 01/01/1990</p>
-                          <p className="text-sm text-white">Email: john@example.com</p>
-                          <p className="text-sm text-white">Phone: +1 234-567-8900</p>
-                          <p className="text-sm text-white">Address: 123 Main St, City, Country</p>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-300 mb-1">Uploaded Documents</h4>
-                        <div className="bg-sidebar rounded-lg p-4 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <FileText className="h-4 w-4 text-gray-300" />
-                              <span className="text-sm text-white">passport.jpg</span>
-                            </div>
-                            <Button variant="ghost" size="sm">View</Button>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <FileText className="h-4 w-4 text-gray-300" />
-                              <span className="text-sm text-white">utility_bill.pdf</span>
-                            </div>
-                            <Button variant="ghost" size="sm">View</Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <div className="flex items-center mb-4">
-                        <input type="checkbox" id="terms" className="mr-2" />
-                        <label htmlFor="terms" className="text-sm text-gray-300">
-                          I confirm that all information provided is accurate and documents are genuine
-                        </label>
-                      </div>
-                    </div>
-                  </Card>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Address
+                  </label>
+                  <Textarea
+                    placeholder="Enter your address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
                 </div>
-              )}
-              
-              <div className="flex justify-between mt-6">
-                {step > 1 && (
-                  <Button variant="outline" onClick={handlePrevStep}>
-                    Previous
-                  </Button>
-                )}
-                
-                <div className="ml-auto">
-                  {step < totalSteps ? (
-                    <Button onClick={handleNextStep}>
-                      Continue
-                    </Button>
-                  ) : (
-                    <Button>
-                      Submit Verification
-                    </Button>
-                  )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Phone Number
+                  </label>
+                  <Input
+                    type="tel"
+                    placeholder="Enter your phone number"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
                 </div>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="business" className="space-y-6">
-              {/* Similar structure as individual, but with business-specific fields */}
-              <Card className="p-6">
-                <h3 className="text-lg font-medium mb-4">Business KYC Coming Soon</h3>
-                <p className="text-gray-300">
-                  The business verification process will be available shortly. Please check back later.
-                </p>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+            </Card>
+          )}
+
+          {/* Business KYC Form */}
+          {kycType === "business" && (
+            <Card className="p-4">
+              <h2 className="text-xl font-semibold text-white mb-4">
+                Business Information
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Company Name
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter company name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Registration Number
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter registration number"
+                    value={registrationNumber}
+                    onChange={(e) => setRegistrationNumber(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Business Address
+                  </label>
+                  <Textarea
+                    placeholder="Enter business address"
+                    value={businessAddress}
+                    onChange={(e) => setBusinessAddress(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">
+                    Business Type
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Enter business type"
+                    value={businessType}
+                    onChange={(e) => setBusinessType(e.target.value)}
+                    className="bg-sidebar border-sidebar-border text-white"
+                    required
+                  />
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Document Upload Section */}
+          <Card className="p-4">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              Document Upload
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  ID Document
+                </label>
+                <Input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) => handleFileChange(e, setIdDocument)}
+                  className="bg-sidebar border-sidebar-border text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-2">
+                  Proof of Address
+                </label>
+                <Input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={(e) => handleFileChange(e, setAddressProof)}
+                  className="bg-sidebar border-sidebar-border text-white"
+                  required
+                />
+              </div>
+              {kycType === "business" && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                      Business Registration
+                    </label>
+                    <Input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => handleFileChange(e, setBusinessRegistration)}
+                      className="bg-sidebar border-sidebar-border text-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                      Other Document (Optional)
+                    </label>
+                    <Input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => handleFileChange(e, setOtherDocument)}
+                      className="bg-sidebar border-sidebar-border text-white"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </Card>
+
+          {/* Terms and Conditions */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              checked={termsAgreed}
+              onCheckedChange={(checked) => setTermsAgreed(!!checked)}
+              className="bg-sidebar border-sidebar-border text-primary"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium text-gray-400 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              I agree to the terms and conditions
+            </label>
+          </div>
+
+          {/* Submit Button */}
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit KYC Information"}
+          </Button>
+        </form>
       </div>
     </Layout>
   );

@@ -1,291 +1,283 @@
-import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
+
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Search,
-  Vote,
-  ClipboardList,
-  Scale,
-  Settings,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
   HelpCircle,
+  Home,
   LogOut,
-  Languages,
   Moon,
+  Settings,
   Sun,
-  X,
+  Users,
+  FileText,
+  Scale,
+  VoteIcon,
+  BarChart,
+  UserCircle,
+  BookOpen
 } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useMobile } from "@/hooks/use-mobile";
 
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}
-
-const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
-  const { t, currentLanguage, changeLanguage } = useLanguage();
-  const location = useLocation();
-  const { user, signOut } = useAuth();
+/**
+ * Sidebar navigation component
+ * 
+ * Provides main navigation for the application
+ */
+const Sidebar = () => {
+  const { t, language, changeLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const isMobile = useMobile();
+  const [expanded, setExpanded] = useState(false);
+  const [contractsOpen, setContractsOpen] = useState(true);
+  const [governanceOpen, setGovernanceOpen] = useState(false);
 
-  const direction = currentLanguage === "ar" ? "rtl" : "ltr";
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error("Sign out failed:", error);
-    }
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  return (
-    <>
-      <div
-        className={cn(
-          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm transition-opacity duration-200",
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        )}
-        onClick={() => setIsOpen(false)}
-      />
-      
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-200 ease-in-out",
-          !isOpen && "-translate-x-full",
-          direction === "rtl" && "left-auto right-0",
-          direction === "rtl" && !isOpen && "translate-x-full"
-        )}
+  const toggleLanguage = () => {
+    changeLanguage(language === "en" ? "ar" : "en");
+  };
+
+  // Classes for active and inactive navigation items
+  const inactiveClass = "flex items-center p-2 hover:bg-sidebar-hover rounded-lg mb-1 text-gray-300 group duration-300";
+  const activeClass = "flex items-center p-2 bg-sidebar-hover rounded-lg mb-1 text-primary group duration-300";
+  
+  // Function to determine if a path is active
+  const isActive = (path: string) => location.pathname === path;
+  
+  // Sidebar item rendering function
+  const renderSidebarItem = (
+    path: string, 
+    icon: React.ReactNode, 
+    text: string
+  ) => (
+    <Link 
+      to={path} 
+      className={isActive(path) ? activeClass : inactiveClass}
+    >
+      {icon}
+      <span
+        className={`ml-3 ${isMobile && !expanded ? "hidden" : ""}`}
       >
-        <div className="flex items-center justify-between px-4 py-3">
-          <span className="font-bold text-xl">Mirror DAO</span>
-          <button
-            className="lg:hidden text-gray-400 hover:text-gray-300"
-            onClick={() => setIsOpen(false)}
+        {text}
+      </span>
+    </Link>
+  );
+
+  return (
+    <aside className="h-screen sticky top-0 overflow-y-auto border-r border-sidebar-border bg-sidebar text-sidebar-foreground w-64 md:w-auto transition-all duration-300">
+      <div className={`h-full px-3 py-4 ${isMobile && !expanded ? "w-16" : "w-64"}`}>
+        {/* Mobile Toggle Button */}
+        {isMobile && (
+          <button 
+            onClick={() => setExpanded(!expanded)} 
+            className="w-full flex justify-end mb-5"
           >
-            <X className="h-6 w-6" />
+            <ArrowRight className={`h-5 w-5 text-gray-300 transform transition-transform duration-300 ${expanded ? "rotate-180" : ""}`} />
           </button>
+        )}
+        
+        {/* Logo */}
+        <div className="mb-5">
+          <Link to="/" className="flex items-center">
+            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-white" />
+            </div>
+            {(!isMobile || expanded) && (
+              <span className="ml-3 text-xl font-semibold text-white">
+                Mirror DAO
+              </span>
+            )}
+          </Link>
         </div>
         
-        <div className="px-4 py-2">
-          {user ? (
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-white">{user.email}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-400">
-                  {t("role")}: {user.roles ? user.roles[0] : "N/A"}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center">
-              <NavLink
-                to="/login"
-                className="block px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/80"
-              >
-                {t("login")}
-              </NavLink>
-            </div>
-          )}
-        </div>
-        
-        <div className="p-4 overflow-y-auto">
-          <nav className="space-y-6">
-            {/* Main Navigation */}
-            <div>
-              <h3 className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                {t("main")}
-              </h3>
-              <ul className="mt-2 space-y-1">
-                <li>
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
-                        isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                      )
-                    }
-                  >
-                    <LayoutDashboard className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("dashboard")}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/explore"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
-                        isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                      )
-                    }
-                  >
-                    <Search className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("explore")}
-                  </NavLink>
-                </li>
+        <div className="space-y-4">
+          {/* Main Navigation */}
+          <div>
+            <ul className="space-y-2">
+              {renderSidebarItem("/", 
+                <Home className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "Home"
+              )}
+              
+              {renderSidebarItem("/explore", 
+                <FileText className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "Explore Contracts"
+              )}
+              
+              {/* Contracts Dropdown */}
+              <li>
+                <button 
+                  onClick={() => setContractsOpen(!contractsOpen)}
+                  className="flex items-center w-full p-2 text-gray-300 hover:bg-sidebar-hover rounded-lg group"
+                >
+                  <FileText className="h-5 w-5 text-gray-300 group-hover:text-primary" />
+                  {(!isMobile || expanded) && (
+                    <>
+                      <span className="flex-1 ml-3">Contracts</span>
+                      {contractsOpen ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </>
+                  )}
+                </button>
                 
-                <li>
-                  <NavLink
-                    to="/voting"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
-                        isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                      )
-                    }
-                  >
-                    <Vote className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("voting")}
-                  </NavLink>
-                </li>
-                
-                <li>
-                  <NavLink
-                    to="/proposals"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
-                        isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                      )
-                    }
-                  >
-                    <ClipboardList className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("proposals")}
-                  </NavLink>
-                </li>
-                
-                {/* New Arbitration Center Link */}
-                <li>
-                  <NavLink
-                    to="/arbitration"
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
-                        isActive
-                          ? "bg-primary text-white"
-                          : "text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                      )
-                    }
-                  >
-                    <Scale className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("arbitration")}
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-            
-            {/* Settings */}
-            <div>
-              <h3 className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                {t("settings")}
-              </h3>
-              <ul className="mt-2 space-y-1">
-                <li>
-                  <button
-                    onClick={() => {
-                      setTheme(theme === "light" ? "dark" : "light");
-                    }}
-                    className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                  >
-                    {theme === "light" ? (
-                      <Moon className="mr-3 h-5 w-5 flex-shrink-0" />
-                    ) : (
-                      <Sun className="mr-3 h-5 w-5 flex-shrink-0" />
-                    )}
-                    {t(theme === "light" ? "darkMode" : "lightMode")}
-                    <div className="ml-auto">
-                      <Switch
-                        checked={theme === "dark"}
-                        onCheckedChange={() => {
-                          setTheme(theme === "light" ? "dark" : "light");
-                        }}
-                      />
-                    </div>
-                  </button>
-                </li>
-                <li>
-                  <button className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white">
-                    <Languages className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("language")}
-                    <div className="ml-auto">
-                      <select
-                        className="bg-transparent border-none text-white focus:ring-0"
-                        value={currentLanguage}
-                        onChange={(e) => changeLanguage(e.target.value)}
+                {contractsOpen && (!isMobile || expanded) && (
+                  <ul className="py-2 space-y-2 pl-6">
+                    <li>
+                      <Link 
+                        to="/contracts/create" 
+                        className={isActive("/contracts/create") ? activeClass : inactiveClass}
                       >
-                        <option value="en">English</option>
-                        <option value="ar">العربية</option>
-                      </select>
-                    </div>
-                  </button>
-                </li>
-                <li>
-                  <NavLink
-                    to="/settings"
-                    className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                  >
-                    <Settings className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("accountSettings")}
-                  </NavLink>
-                </li>
-              </ul>
+                        Create Contract
+                      </Link>
+                    </li>
+                    <li>
+                      <Link 
+                        to="/kyc" 
+                        className={isActive("/kyc") ? activeClass : inactiveClass}
+                      >
+                        KYC Verification
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+              
+              {/* Governance Dropdown */}
+              <li>
+                <button 
+                  onClick={() => setGovernanceOpen(!governanceOpen)}
+                  className="flex items-center w-full p-2 text-gray-300 hover:bg-sidebar-hover rounded-lg group"
+                >
+                  <Users className="h-5 w-5 text-gray-300 group-hover:text-primary" />
+                  {(!isMobile || expanded) && (
+                    <>
+                      <span className="flex-1 ml-3">Governance</span>
+                      {governanceOpen ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </>
+                  )}
+                </button>
+                
+                {governanceOpen && (!isMobile || expanded) && (
+                  <ul className="py-2 space-y-2 pl-6">
+                    <li>
+                      <Link 
+                        to="/proposals" 
+                        className={isActive("/proposals") ? activeClass : inactiveClass}
+                      >
+                        Proposals
+                      </Link>
+                    </li>
+                    <li>
+                      <Link 
+                        to="/voting" 
+                        className={isActive("/voting") ? activeClass : inactiveClass}
+                      >
+                        Voting
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+              
+              {/* Arbitration */}
+              {renderSidebarItem("/arbitration", 
+                <Scale className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "Arbitration"
+              )}
+            </ul>
+          </div>
+          
+          {/* Page Links */}
+          <div>
+            <div className={`pt-4 mt-4 border-t border-sidebar-border ${isMobile && !expanded ? "hidden" : ""}`}>
+              <h5 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">
+                Pages
+              </h5>
+            </div>
+            <ul className="space-y-2">
+              {renderSidebarItem("/about", 
+                <BookOpen className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "About"
+              )}
+              
+              {renderSidebarItem("/contact", 
+                <HelpCircle className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "Contact Us"
+              )}
+              
+              {renderSidebarItem("/faq", 
+                <HelpCircle className="h-5 w-5 text-gray-300 group-hover:text-primary" />, 
+                "FAQs"
+              )}
+            </ul>
+          </div>
+          
+          {/* User Actions */}
+          <div className={`pt-4 mt-4 border-t border-sidebar-border ${isMobile && !expanded ? "hidden" : ""}`}>
+            <div className="flex items-center mb-2">
+              <Button 
+                onClick={toggleTheme} 
+                variant="ghost" 
+                className="w-full justify-start text-gray-300 hover:text-primary"
+              >
+                {theme === "light" ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+                <span className="ml-3">{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
+              </Button>
             </div>
             
-            {/* Support */}
-            <div>
-              <h3 className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                {t("support")}
-              </h3>
-              <ul className="mt-2 space-y-1">
-                <li>
-                  <NavLink
-                    to="/help"
-                    className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                  >
-                    <HelpCircle className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("helpCenter")}
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/contact"
-                    className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                  >
-                    <HelpCircle className="mr-3 h-5 w-5 flex-shrink-0" />
-                    {t("contactUs")}
-                  </NavLink>
-                </li>
-                {user && (
-                  <li>
-                    <button
-                      onClick={handleSignOut}
-                      className="flex items-center px-2 py-2 text-sm font-medium rounded-md group text-gray-300 hover:bg-sidebar-hover hover:text-white"
-                    >
-                      <LogOut className="mr-3 h-5 w-5 flex-shrink-0" />
-                      {t("signOut")}
-                    </button>
-                  </li>
-                )}
-              </ul>
+            <div className="flex items-center mb-2">
+              <Button 
+                onClick={toggleLanguage} 
+                variant="ghost" 
+                className="w-full justify-start text-gray-300 hover:text-primary"
+              >
+                <span className="h-5 w-5 flex items-center justify-center font-bold">
+                  {language === "en" ? "ع" : "En"}
+                </span>
+                <span className="ml-3">
+                  {language === "en" ? "العربية" : "English"}
+                </span>
+              </Button>
             </div>
-          </nav>
+            
+            {isAuthenticated && (
+              <div className="flex items-center mb-2">
+                <Button 
+                  onClick={() => logout()} 
+                  variant="ghost" 
+                  className="w-full justify-start text-gray-300 hover:text-primary"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span className="ml-3">Log Out</span>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 };
 
