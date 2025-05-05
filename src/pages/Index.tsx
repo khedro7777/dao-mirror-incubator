@@ -6,7 +6,7 @@ import GatewayCard from "@/components/cards/GatewayCard";
 import ProposalCard from "@/components/cards/ProposalCard";
 import KycStatusCard from "@/components/cards/KycStatusCard";
 import ArbitrationCard from "@/components/cards/ArbitrationCard";
-import { Users, ShoppingBag, FileText, Scale } from "lucide-react";
+import { Users, ShoppingBag, FileText, Scale, Megaphone } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const Index = () => {
@@ -32,6 +32,13 @@ const Index = () => {
       icon: <FileText size={24} />,
       buttonText: "See Open Jobs",
       buttonLink: "/gateway/freelance",
+    },
+    {
+      title: "Join as Marketer",
+      description: "Collaborate on marketing campaigns and share costs with other businesses",
+      icon: <Megaphone size={24} />,
+      buttonText: "See Marketing Opportunities",
+      buttonLink: "/gateway/group-marketing",
     },
   ];
 
@@ -67,6 +74,16 @@ const Index = () => {
       buttonText: "Explore Freelance",
       buttonLink: "/gateway/freelance",
     },
+    {
+      title: "Group Marketing",
+      description: [
+        "Join forces with other businesses for collaborative marketing campaigns.",
+        "Share costs and expand your reach through collective marketing efforts.",
+        "Transparent budget management and clear performance metrics for all participants.",
+      ],
+      buttonText: "Explore Group Marketing",
+      buttonLink: "/gateway/group-marketing",
+    },
   ];
 
   // Sample data for hot contracts
@@ -80,6 +97,16 @@ const Index = () => {
       votes: { yes: 12, no: 2, abstain: 1 },
       endDate: "Jun 15, 2023",
       category: "Group Buying",
+    },
+    {
+      title: "Social Media Campaign",
+      author: "MarketingPro",
+      authorRole: "Marketing Agency",
+      description: "Joint social media campaign for tech businesses. Looking for 3 more participants.",
+      status: "Active",
+      votes: { yes: 8, no: 1, abstain: 0 },
+      endDate: "Jun 20, 2023",
+      category: "Group Marketing",
     },
     {
       title: "Mobile App Development",
@@ -131,7 +158,7 @@ const Index = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Welcome to Mirror DAO</h1>
         <p className="text-gray-300">
-          A decentralized platform for group buying, funding, and freelance contracts
+          A decentralized platform for group buying, funding, freelance contracts, and collaborative marketing
         </p>
       </div>
 
@@ -143,7 +170,7 @@ const Index = () => {
       {/* ==== ROLE CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Get Started</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {roleCards.map((card) => (
             <RoleCard
               key={card.title}
@@ -160,7 +187,7 @@ const Index = () => {
       {/* ==== GATEWAY CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Explore Gateways</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {gatewayCards.map((card) => (
             <GatewayCard
               key={card.title}
@@ -215,7 +242,7 @@ const Index = () => {
             View All
           </a>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {hotContracts.map((contract) => (
             <ProposalCard
               key={contract.title}

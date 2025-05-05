@@ -19,6 +19,7 @@ import Faq from "./pages/Faq";
 import VotingPage from "./pages/VotingPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ArbitrationPage from "./pages/ArbitrationPage";
+import GroupMarketingPage from "./pages/GroupMarketingPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/voting" element={<VotingPage />} />
                 <Route path="/proposals" element={<ProposalsPage />} />
                 <Route path="/arbitration" element={<ArbitrationPage />} />
+                <Route path="/gateway/group-marketing" element={<GroupMarketingPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

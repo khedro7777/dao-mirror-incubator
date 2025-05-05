@@ -37,6 +37,10 @@ const Contracts = {
           label: 'Freelance',
           value: 'freelance',
         },
+        {
+          label: 'Group Marketing',
+          value: 'group-marketing',
+        },
       ],
       required: true,
     },
@@ -69,6 +73,10 @@ const Contracts = {
         {
           label: 'Buyer',
           value: 'buyer',
+        },
+        {
+          label: 'Marketing Agency',
+          value: 'marketing-agency',
         },
       ],
       required: true,

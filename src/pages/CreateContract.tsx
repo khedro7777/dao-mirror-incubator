@@ -40,10 +40,11 @@ const CreateContract = () => {
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">Contract Type</h2>
           <Tabs defaultValue="group-buying" className="w-full" onValueChange={setContractType}>
-            <TabsList className="grid grid-cols-3 mb-6">
+            <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="group-buying">Group Buying</TabsTrigger>
               <TabsTrigger value="funding">Funding</TabsTrigger>
               <TabsTrigger value="freelance">Freelance</TabsTrigger>
+              <TabsTrigger value="group-marketing">Group Marketing</TabsTrigger>
             </TabsList>
             
             <TabsContent value="group-buying" className="space-y-4">
@@ -61,6 +62,12 @@ const CreateContract = () => {
             <TabsContent value="freelance" className="space-y-4">
               <p className="text-gray-300 text-sm">
                 Create a freelance contract to define work terms, deliverables, and payment schedules.
+              </p>
+            </TabsContent>
+            
+            <TabsContent value="group-marketing" className="space-y-4">
+              <p className="text-gray-300 text-sm">
+                Create a group marketing contract to collaborate with other businesses on marketing campaigns and share costs.
               </p>
             </TabsContent>
           </Tabs>
@@ -93,6 +100,8 @@ const CreateContract = () => {
                 <option value="retail">Retail</option>
                 <option value="manufacturing">Manufacturing</option>
                 <option value="services">Services</option>
+                <option value="marketing">Marketing</option>
+                <option value="advertising">Advertising</option>
                 <option value="other">Other</option>
               </select>
             </div>
