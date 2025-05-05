@@ -14,9 +14,11 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
+  isAuthenticated: boolean;
   signIn: (email: string) => Promise<{ success: boolean; error?: any }>;
   verifyOtp: (email: string, token: string) => Promise<{ success: boolean; error?: any }>;
   signOut: () => Promise<{ success: boolean; error?: any }>;
+  logout: () => Promise<{ success: boolean; error?: any }>;
   updateUserProfile: (userData: Partial<User>) => Promise<{ success: boolean; error?: any }>;
 }
 
@@ -26,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     // Check for user session on mount
@@ -134,6 +137,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Alias for backward compatibility
+  const logout = signOut;
+
   const updateUserProfile = async (userData: Partial<User>) => {
     try {
       if (!user || !user.id) {
@@ -159,7 +165,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, error, signIn, verifyOtp, signOut, updateUserProfile }}
+      value={{ 
+        user, 
+        loading, 
+        error, 
+        isAuthenticated, 
+        signIn, 
+        verifyOtp, 
+        signOut, 
+        logout, 
+        updateUserProfile 
+      }}
     >
       {children}
     </AuthContext.Provider>

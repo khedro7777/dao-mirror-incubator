@@ -1,3 +1,4 @@
+
 export type Language = "en" | "ar";
 
 interface Translations {
@@ -11,6 +12,9 @@ const translations: Translations = {
     funding: "Funding",
     freelance: "Freelance",
     pending: "Pending",
+    active: "Active",
+    closed: "Closed",
+    groupBuying: "Group Buying",
     appName: "Mirror DAO",
     welcomeTo: "Welcome to",
     appDescription: "A decentralized autonomous organization for transparent and efficient contract management.",
@@ -84,6 +88,9 @@ const translations: Translations = {
     funding: "تمويل",
     freelance: "عمل حر",
     pending: "قيد الانتظار",
+    active: "نشط",
+    closed: "مغلق",
+    groupBuying: "شراء جماعي",
     appName: "مرآة DAO",
     welcomeTo: "مرحبا بك في",
     appDescription: "منظمة مستقلة لامركزية لإدارة العقود بشفافية وكفاءة.",
@@ -166,6 +173,9 @@ export type LanguageKey =
   | "funding"
   | "freelance"
   | "pending"
+  | "active"
+  | "closed"
+  | "groupBuying"
   | "appName"
   | "welcomeTo"
   | "appDescription"

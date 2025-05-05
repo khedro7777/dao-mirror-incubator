@@ -23,19 +23,19 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 /**
  * Sidebar navigation component
  * 
  * Provides main navigation for the application
  */
-const Sidebar = () => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const { t, language, changeLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const location = useLocation();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
   const [contractsOpen, setContractsOpen] = useState(true);
   const [governanceOpen, setGovernanceOpen] = useState(false);
@@ -262,10 +262,10 @@ const Sidebar = () => {
               </Button>
             </div>
             
-            {isAuthenticated && (
+            {user && (
               <div className="flex items-center mb-2">
                 <Button 
-                  onClick={() => logout()} 
+                  onClick={() => signOut()} 
                   variant="ghost" 
                   className="w-full justify-start text-gray-300 hover:text-primary"
                 >
