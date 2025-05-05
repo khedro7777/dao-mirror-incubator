@@ -1,3 +1,4 @@
+
 export type Language = "en" | "ar";
 
 interface Translations {
@@ -35,6 +36,36 @@ const translations: Translations = {
     seeFundingOpportunities: "See Funding Opportunities",
     seeOpenJobs: "See Open Jobs",
     seeMarketingOpportunities: "See Marketing Opportunities",
+    // Added new keys for time-related content
+    days: "days",
+    day: "day",
+    ago: "ago",
+    hours: "hours",
+    hour: "hour",
+    minutes: "minutes",
+    minute: "minute",
+    justNow: "just now",
+    // Added new keys for proposals page
+    proposals: "Proposals",
+    proposalsDescription: "View and manage all proposal submissions for open contracts",
+    searchProposals: "Search proposals...",
+    filterByStatus: "Filter by Status",
+    allStatus: "All Status",
+    filterByCategory: "Filter by Category",
+    allCategories: "All Categories",
+    newProposal: "New Proposal",
+    createdBy: "Created by",
+    details: "Details",
+    vote: "Vote",
+    noProposalsFound: "No proposals found matching your criteria",
+    clearFilters: "Clear Filters",
+    // Added new keys for voting page
+    votingDay: "day",
+    votingDays: "days",
+    votingHour: "hour",
+    votingHours: "hours",
+    votingMinute: "minute",
+    votingMinutes: "minutes",
   },
   ar: {
     home: "الرئيسية",
@@ -64,6 +95,36 @@ const translations: Translations = {
     seeFundingOpportunities: "رؤية فرص التمويل",
     seeOpenJobs: "رؤية الوظائف المفتوحة",
     seeMarketingOpportunities: "رؤية فرص التسويق",
+    // Added new keys for time-related content in Arabic
+    days: "أيام",
+    day: "يوم",
+    ago: "مضت",
+    hours: "ساعات",
+    hour: "ساعة",
+    minutes: "دقائق",
+    minute: "دقيقة",
+    justNow: "الآن",
+    // Added new keys for proposals page in Arabic
+    proposals: "المقترحات",
+    proposalsDescription: "عرض وإدارة جميع المقترحات المقدمة للعقود المفتوحة",
+    searchProposals: "البحث عن المقترحات...",
+    filterByStatus: "تصفية حسب الحالة",
+    allStatus: "جميع الحالات",
+    filterByCategory: "تصفية حسب الفئة",
+    allCategories: "جميع الفئات",
+    newProposal: "مقترح جديد",
+    createdBy: "أنشأه",
+    details: "التفاصيل",
+    vote: "تصويت",
+    noProposalsFound: "لم يتم العثور على مقترحات تطابق معاييرك",
+    clearFilters: "مسح عوامل التصفية",
+    // Added new keys for voting page in Arabic
+    votingDay: "يوم",
+    votingDays: "أيام",
+    votingHour: "ساعة",
+    votingHours: "ساعات",
+    votingMinute: "دقيقة",
+    votingMinutes: "دقائق",
   },
 };
 
@@ -106,3 +167,33 @@ export type LanguageKey =
   | "seeFundingOpportunities"
   | "seeOpenJobs"
   | "seeMarketingOpportunities"
+  // Added new language keys for time-related content
+  | "days"
+  | "day"
+  | "ago"
+  | "hours"
+  | "hour"
+  | "minutes"
+  | "minute"
+  | "justNow"
+  // Added new language keys for proposals page
+  | "proposals"
+  | "proposalsDescription"
+  | "searchProposals"
+  | "filterByStatus"
+  | "allStatus"
+  | "filterByCategory"
+  | "allCategories"
+  | "newProposal"
+  | "createdBy"
+  | "details"
+  | "vote"
+  | "noProposalsFound"
+  | "clearFilters"
+  // Added new language keys for voting page
+  | "votingDay"
+  | "votingDays"
+  | "votingHour"
+  | "votingHours"
+  | "votingMinute"
+  | "votingMinutes";

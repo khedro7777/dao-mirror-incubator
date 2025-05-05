@@ -36,9 +36,9 @@ const GroupMarketingPage = () => {
     {
       title: "Social Media Campaign",
       author: "MarketingPro",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Joint marketing campaign across social media platforms. Looking for 5 more businesses to share costs and expand reach.",
-      status: "Active",
+      status: "Active" as const,
       votes: { yes: 14, no: 2, abstain: 1 },
       endDate: "Jun 18, 2023",
       category: "Group Marketing",
@@ -46,9 +46,9 @@ const GroupMarketingPage = () => {
     {
       title: "Email Marketing Bundle",
       author: "EmailAgency",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Group contract for comprehensive email marketing services including design, content, and analytics.",
-      status: "Active",
+      status: "Active" as const,
       votes: { yes: 10, no: 1, abstain: 0 },
       endDate: "Jun 20, 2023",
       category: "Group Marketing",
@@ -56,9 +56,9 @@ const GroupMarketingPage = () => {
     {
       title: "Trade Show Participation",
       author: "ExpoGroup",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Joint participation in upcoming industry trade show to share booth costs and increase visibility.",
-      status: "Pending",
+      status: "Pending" as const,
       votes: { yes: 0, no: 0, abstain: 0 },
       endDate: "Jul 10, 2023",
       category: "Group Marketing",
@@ -66,9 +66,9 @@ const GroupMarketingPage = () => {
     {
       title: "Content Marketing Partnership",
       author: "ContentCreators",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Collaborative content marketing initiative to create and distribute industry-specific content.",
-      status: "Active",
+      status: "Active" as const,
       votes: { yes: 8, no: 1, abstain: 0 },
       endDate: "Jun 25, 2023",
       category: "Group Marketing",
@@ -76,9 +76,9 @@ const GroupMarketingPage = () => {
     {
       title: "Digital Advertising Coalition",
       author: "AdSpecialists",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Group contract for digital advertising across multiple platforms to increase ROI and reach.",
-      status: "Active",
+      status: "Active" as const,
       votes: { yes: 12, no: 2, abstain: 1 },
       endDate: "Jun 30, 2023",
       category: "Group Marketing",
@@ -86,14 +86,14 @@ const GroupMarketingPage = () => {
     {
       title: "Video Production Partnership",
       author: "VideoStudio",
-      authorRole: "Marketing Agency",
+      authorRole: "Marketing Agency" as const,
       description: "Collaborative video production project to share costs and create high-quality marketing videos.",
-      status: "Pending",
+      status: "Pending" as const,
       votes: { yes: 0, no: 0, abstain: 0 },
       endDate: "Jul 5, 2023",
       category: "Group Marketing",
     },
-  ] as const;
+  ];
 
   // Filter the contracts based on search term and filters
   const filteredContracts = contracts.filter((contract) => {
@@ -264,7 +264,7 @@ const GroupMarketingPage = () => {
           <div className="flex justify-between">
             <div>
               <p className="text-gray-400 text-sm">Closed Contracts</p>
-              <p className="text-2xl font-bold text-white">{contracts.filter(c => c.status === 'Closed').length}</p>
+              <p className="text-2xl font-bold text-white">{contracts.filter(c => c.status === 'Closed').length || 0}</p>
             </div>
             <div className="h-10 w-10 bg-blue-500/20 rounded-full flex items-center justify-center">
               <Megaphone className="h-5 w-5 text-blue-500" />

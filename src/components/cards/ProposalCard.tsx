@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface ProposalCardProps {
   title: string;
   author: string;
-  authorRole: "Supplier" | "Investor" | "Freelancer";
+  authorRole: "Supplier" | "Investor" | "Freelancer" | "Marketing Agency";
   description: string;
   status: "Active" | "Pending" | "Closed";
   votes?: {
@@ -56,6 +56,8 @@ const ProposalCard = ({
         return "bg-purple-600";
       case "freelancer":
         return "bg-orange-600";
+      case "marketing agency":
+        return "bg-pink-600";
       default:
         return "bg-gray-600";
     }
