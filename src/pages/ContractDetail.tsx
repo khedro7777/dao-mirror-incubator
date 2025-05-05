@@ -103,8 +103,10 @@ const ContractDetail = () => {
       return voting.submitProposal({
         userId: user.id,
         contractId: id,
+        title: `Proposal for Contract ${id}`, // Add title property
         content: content,
-        type: 'proposal'
+        type: 'proposal',
+        userRole: user.roles?.[0] // Pass user role for category determination
       });
     },
     onSuccess: (data) => {

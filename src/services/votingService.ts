@@ -94,6 +94,18 @@ export const votingService = {
         return { success: false, error: 'User role not authorized to submit proposals' };
       }
       
+      // Determine category based on user role if not provided
+      let category = proposalData.category;
+      if (!category && proposalData.userRole) {
+        if (proposalData.userRole === 'freelancer') {
+          category = 'freelance';
+        } else if (proposalData.userRole === 'investor') {
+          category = 'funding';
+        } else if (['supplier', 'buyer'].includes(proposalData.userRole)) {
+          category = 'group-buying';
+        }
+      }
+      
       const response = await fetch(`${payloadCmsUrl}/api/proposals`, {
         method: 'POST',
         headers: {
@@ -105,9 +117,7 @@ export const votingService = {
           title: proposalData.title,
           content: proposalData.content,
           type: proposalData.type,
-          category: proposalData.category || 
-            (proposalData.userRole === 'freelancer' ? 'freelance' : 
-             proposalData.userRole === 'investor' ? 'funding' : 'group-buying'),
+          category: category || 'group-buying', // Default to group-buying if no category determined
           timestamp: new Date().toISOString(),
           status: 'pending',
           price: proposalData.price,
