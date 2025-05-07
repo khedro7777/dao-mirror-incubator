@@ -17,7 +17,8 @@ const ProposalsPage = () => {
     setCategoryFilter,
     filteredProposals,
     canSubmitProposal,
-    hasUserVoteAccess
+    hasUserVoteAccess,
+    clearFilters
   } = useProposals();
 
   return (
@@ -43,6 +44,7 @@ const ProposalsPage = () => {
         <ProposalsList 
           proposals={filteredProposals}
           hasUserVoteAccess={hasUserVoteAccess}
+          onClearFilters={clearFilters}
         />
       </div>
     </Layout>

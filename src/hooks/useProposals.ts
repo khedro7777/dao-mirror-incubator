@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { votingService } from "@/services/votingService";
@@ -74,6 +73,13 @@ export const useProposals = () => {
     }
   ];
   
+  // Clear all filters function
+  const clearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("All");
+    setCategoryFilter("all");
+  };
+  
   // Check if user can submit proposals
   const canSubmitProposal = () => {
     if (!user || !user.roles) return false;
@@ -118,6 +124,7 @@ export const useProposals = () => {
     setCategoryFilter,
     filteredProposals: getFilteredProposals(),
     canSubmitProposal: canSubmitProposal(),
-    hasUserVoteAccess: hasUserVoteAccess()
+    hasUserVoteAccess: hasUserVoteAccess(),
+    clearFilters
   };
 };
