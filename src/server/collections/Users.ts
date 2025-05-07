@@ -35,6 +35,10 @@ const Users = {
           label: 'Freelancer',
           value: 'freelancer',
         },
+        {
+          label: 'Admin',
+          value: 'admin',
+        },
       ],
       defaultValue: [],
     },

@@ -20,6 +20,7 @@ import VotingPage from "./pages/VotingPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ArbitrationPage from "./pages/ArbitrationPage";
 import GroupMarketingPage from "./pages/GroupMarketingPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
                 <Route path="/proposals" element={<ProposalsPage />} />
                 <Route path="/arbitration" element={<ArbitrationPage />} />
                 <Route path="/gateway/group-marketing" element={<GroupMarketingPage />} />
+                <Route path="/admin" element={<AdminDashboard />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
