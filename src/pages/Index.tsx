@@ -8,6 +8,13 @@ import KycStatusCard from "@/components/cards/KycStatusCard";
 import ArbitrationCard from "@/components/cards/ArbitrationCard";
 import { Users, ShoppingBag, FileText, Scale, Megaphone } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
 
 const Index = () => {
   // Sample data for role cards
@@ -170,34 +177,50 @@ const Index = () => {
       {/* ==== ROLE CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Get Started</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {roleCards.map((card) => (
-            <RoleCard
-              key={card.title}
-              title={card.title}
-              description={card.description}
-              icon={card.icon}
-              buttonText={card.buttonText}
-              buttonLink={card.buttonLink}
-            />
-          ))}
-        </div>
+        <Carousel opts={{ align: "start" }} className="w-full">
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {roleCards.map((card, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                <RoleCard
+                  key={card.title}
+                  title={card.title}
+                  description={card.description}
+                  icon={card.icon}
+                  buttonText={card.buttonText}
+                  buttonLink={card.buttonLink}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center mt-4">
+            <CarouselPrevious className="relative static mr-2" />
+            <CarouselNext className="relative static ml-2" />
+          </div>
+        </Carousel>
       </section>
 
       {/* ==== GATEWAY CARDS SECTION ==== */}
       <section className="mb-10">
         <h2 className="text-2xl font-semibold text-white mb-6">Explore Gateways</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {gatewayCards.map((card) => (
-            <GatewayCard
-              key={card.title}
-              title={card.title}
-              description={card.description}
-              buttonText={card.buttonText}
-              buttonLink={card.buttonLink}
-            />
-          ))}
-        </div>
+        <Carousel opts={{ align: "start" }} className="w-full">
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {gatewayCards.map((card, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3">
+                <GatewayCard
+                  key={card.title}
+                  title={card.title}
+                  description={card.description}
+                  buttonText={card.buttonText}
+                  buttonLink={card.buttonLink}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center mt-4">
+            <CarouselPrevious className="relative static mr-2" />
+            <CarouselNext className="relative static ml-2" />
+          </div>
+        </Carousel>
       </section>
 
       {/* ==== ARBITRATION CENTER SECTION ==== */}
@@ -242,21 +265,29 @@ const Index = () => {
             View All
           </a>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {hotContracts.map((contract) => (
-            <ProposalCard
-              key={contract.title}
-              title={contract.title}
-              author={contract.author}
-              authorRole={contract.authorRole}
-              description={contract.description}
-              status={contract.status}
-              votes={contract.votes}
-              endDate={contract.endDate}
-              category={contract.category}
-            />
-          ))}
-        </div>
+        <Carousel opts={{ align: "start" }} className="w-full">
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {hotContracts.map((contract, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                <ProposalCard
+                  key={contract.title}
+                  title={contract.title}
+                  author={contract.author}
+                  authorRole={contract.authorRole}
+                  description={contract.description}
+                  status={contract.status}
+                  votes={contract.votes}
+                  endDate={contract.endDate}
+                  category={contract.category}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex justify-center mt-4">
+            <CarouselPrevious className="relative static mr-2" />
+            <CarouselNext className="relative static ml-2" />
+          </div>
+        </Carousel>
       </section>
     </Layout>
   );
