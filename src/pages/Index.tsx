@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import RoleCard from "@/components/cards/RoleCard";
@@ -8,6 +9,8 @@ import ArbitrationCard from "@/components/cards/ArbitrationCard";
 import SearchInput from "@/components/ui/search-input";
 import { Users, ShoppingBag, FileText, Scale, Megaphone } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 import { 
   Carousel, 
   CarouselContent, 
@@ -18,6 +21,7 @@ import {
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { direction } = useLanguage();
   
   // Sample data for role cards
   const roleCards = [
@@ -174,88 +178,73 @@ const Index = () => {
   return (
     <Layout>
       {/* ==== HEADER SECTION ==== */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Welcome to Mirror DAO</h1>
-        <p className="text-gray-300">
+      <div className="mb-6">
+        <h1 className={cn("text-3xl font-bold text-white", direction === "rtl" ? "text-right" : "")}>Welcome to Mirror DAO</h1>
+        <p className={cn("text-gray-300", direction === "rtl" ? "text-right" : "")}>
           A decentralized platform for group buying, funding, freelance contracts, and collaborative marketing
         </p>
       </div>
 
       {/* ==== SEARCH SECTION ==== */}
-      <section className="mb-10">
-        <div className="mb-6">
+      <section className="mb-6">
+        <div className="mb-4">
           <SearchInput
             placeholder="Search contracts, projects, or opportunities..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="max-w-full"
           />
         </div>
       </section>
 
       {/* ==== KYC STATUS SECTION ==== */}
-      <section className="mb-10">
+      <section className="mb-6">
         <KycStatusCard status="Not Started" />
       </section>
 
       {/* ==== ROLE CARDS SECTION ==== */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold text-white mb-6">Get Started</h2>
-        <Carousel opts={{ align: "start" }} className="w-full">
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {roleCards.map((card, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <RoleCard
-                  key={card.title}
-                  title={card.title}
-                  description={card.description}
-                  icon={card.icon}
-                  buttonText={card.buttonText}
-                  buttonLink={card.buttonLink}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center mt-4">
-            <CarouselPrevious className="relative static mr-2" />
-            <CarouselNext className="relative static ml-2" />
-          </div>
-        </Carousel>
+      <section className="mb-6">
+        <h2 className={cn("text-2xl font-semibold text-white mb-4", direction === "rtl" ? "text-right" : "")}>Get Started</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {roleCards.map((card, index) => (
+            <RoleCard
+              key={index}
+              title={card.title}
+              description={card.description}
+              icon={card.icon}
+              buttonText={card.buttonText}
+              buttonLink={card.buttonLink}
+            />
+          ))}
+        </div>
       </section>
 
       {/* ==== GATEWAY CARDS SECTION ==== */}
-      <section className="mb-10">
-        <h2 className="text-2xl font-semibold text-white mb-6">Explore Gateways</h2>
-        <Carousel opts={{ align: "start" }} className="w-full">
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {gatewayCards.map((card, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3">
-                <GatewayCard
-                  key={card.title}
-                  title={card.title}
-                  description={card.description}
-                  buttonText={card.buttonText}
-                  buttonLink={card.buttonLink}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center mt-4">
-            <CarouselPrevious className="relative static mr-2" />
-            <CarouselNext className="relative static ml-2" />
-          </div>
-        </Carousel>
+      <section className="mb-6">
+        <h2 className={cn("text-2xl font-semibold text-white mb-4", direction === "rtl" ? "text-right" : "")}>Explore Gateways</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {gatewayCards.map((card, index) => (
+            <GatewayCard
+              key={index}
+              title={card.title}
+              description={card.description}
+              buttonText={card.buttonText}
+              buttonLink={card.buttonLink}
+            />
+          ))}
+        </div>
       </section>
 
       {/* ==== ARBITRATION CENTER SECTION ==== */}
-      <section className="mb-10">
-        <div className="flex justify-between items-center mb-6">
+      <section className="mb-6">
+        <div className={cn("flex justify-between items-center mb-4", direction === "rtl" ? "flex-row-reverse" : "")}>
           <h2 className="text-2xl font-semibold text-white">Arbitration Center</h2>
           <a href="/arbitration" className="text-primary hover:text-primary/80 font-medium">
             View All Cases
           </a>
         </div>
         
-        <Card className="p-6 mb-6 border-primary/30">
+        <Card className="p-6 mb-4 border-primary/30">
           <div className="flex items-center gap-3 mb-4">
             <Scale className="h-6 w-6 text-primary" />
             <h3 className="text-xl font-semibold text-white">Dispute Resolution Services</h3>
@@ -263,7 +252,7 @@ const Index = () => {
           <p className="text-gray-300 mb-4">
             Our arbitration center offers fair and efficient resolution for contract disputes through our panel of expert arbitrators. All decisions are binding and enforced through smart contracts.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             {arbitrationCases.map((item) => (
               <ArbitrationCard
                 key={item.id}
@@ -282,7 +271,7 @@ const Index = () => {
 
       {/* ==== HOT CONTRACTS SECTION WITH SEARCH RESULTS ==== */}
       <section>
-        <div className="flex justify-between items-center mb-6">
+        <div className={cn("flex justify-between items-center mb-4", direction === "rtl" ? "flex-row-reverse" : "")}>
           <h2 className="text-2xl font-semibold text-white">
             {searchQuery ? "Search Results" : "Hot Contracts Now"}
           </h2>
@@ -291,29 +280,21 @@ const Index = () => {
           </a>
         </div>
         {filteredContracts.length > 0 ? (
-          <Carousel opts={{ align: "start" }} className="w-full">
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {filteredContracts.map((contract, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                  <ProposalCard
-                    key={contract.title}
-                    title={contract.title}
-                    author={contract.author}
-                    authorRole={contract.authorRole}
-                    description={contract.description}
-                    status={contract.status}
-                    votes={contract.votes}
-                    endDate={contract.endDate}
-                    category={contract.category}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center mt-4">
-              <CarouselPrevious className="relative static mr-2" />
-              <CarouselNext className="relative static ml-2" />
-            </div>
-          </Carousel>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredContracts.map((contract, index) => (
+              <ProposalCard
+                key={index}
+                title={contract.title}
+                author={contract.author}
+                authorRole={contract.authorRole}
+                description={contract.description}
+                status={contract.status}
+                votes={contract.votes}
+                endDate={contract.endDate}
+                category={contract.category}
+              />
+            ))}
+          </div>
         ) : searchQuery ? (
           <div className="bg-card/30 p-8 text-center rounded-lg border border-primary/20">
             <p className="text-gray-300">No contracts found matching your search criteria.</p>

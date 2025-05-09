@@ -21,10 +21,10 @@ const SearchInput = ({
   const { direction } = useLanguage();
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Search 
         className={cn(
-          "absolute top-3 text-gray-400 pointer-events-none", 
+          "absolute top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none", 
           direction === "rtl" ? "left-3" : "right-3"
         )} 
         size={18} 
@@ -35,8 +35,8 @@ const SearchInput = ({
         value={value}
         onChange={onChange}
         className={cn(
-          "pl-4 pr-10 py-2 w-full bg-card/80 border-primary/30 text-white focus-visible:ring-primary",
-          direction === "rtl" ? "pr-4 pl-10 text-right" : "",
+          "w-full bg-card/80 border-primary/30 text-white focus-visible:ring-primary",
+          direction === "rtl" ? "pl-10 pr-4 text-right" : "pr-10 pl-4",
           className
         )}
       />
