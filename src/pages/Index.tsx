@@ -1,11 +1,11 @@
-
-import React from "react";
+import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import RoleCard from "@/components/cards/RoleCard";
 import GatewayCard from "@/components/cards/GatewayCard";
 import ProposalCard from "@/components/cards/ProposalCard";
 import KycStatusCard from "@/components/cards/KycStatusCard";
 import ArbitrationCard from "@/components/cards/ArbitrationCard";
+import SearchInput from "@/components/ui/search-input";
 import { Users, ShoppingBag, FileText, Scale, Megaphone } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { 
@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/carousel";
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   // Sample data for role cards
   const roleCards = [
     {
@@ -159,6 +161,16 @@ const Index = () => {
     }
   ];
 
+  // Filter the contracts based on search query
+  const filteredContracts = searchQuery 
+    ? hotContracts.filter(contract => 
+        contract.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contract.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contract.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contract.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : hotContracts;
+
   return (
     <Layout>
       {/* ==== HEADER SECTION ==== */}
@@ -168,6 +180,17 @@ const Index = () => {
           A decentralized platform for group buying, funding, freelance contracts, and collaborative marketing
         </p>
       </div>
+
+      {/* ==== SEARCH SECTION ==== */}
+      <section className="mb-10">
+        <div className="mb-6">
+          <SearchInput
+            placeholder="Search contracts, projects, or opportunities..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </section>
 
       {/* ==== KYC STATUS SECTION ==== */}
       <section className="mb-10">
@@ -257,37 +280,45 @@ const Index = () => {
         </Card>
       </section>
 
-      {/* ==== HOT CONTRACTS SECTION ==== */}
+      {/* ==== HOT CONTRACTS SECTION WITH SEARCH RESULTS ==== */}
       <section>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-white">Hot Contracts Now</h2>
+          <h2 className="text-2xl font-semibold text-white">
+            {searchQuery ? "Search Results" : "Hot Contracts Now"}
+          </h2>
           <a href="/explore" className="text-primary hover:text-primary/80 font-medium">
             View All
           </a>
         </div>
-        <Carousel opts={{ align: "start" }} className="w-full">
-          <CarouselContent className="-ml-2 md:-ml-4">
-            {hotContracts.map((contract, index) => (
-              <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-                <ProposalCard
-                  key={contract.title}
-                  title={contract.title}
-                  author={contract.author}
-                  authorRole={contract.authorRole}
-                  description={contract.description}
-                  status={contract.status}
-                  votes={contract.votes}
-                  endDate={contract.endDate}
-                  category={contract.category}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center mt-4">
-            <CarouselPrevious className="relative static mr-2" />
-            <CarouselNext className="relative static ml-2" />
+        {filteredContracts.length > 0 ? (
+          <Carousel opts={{ align: "start" }} className="w-full">
+            <CarouselContent className="-ml-2 md:-ml-4">
+              {filteredContracts.map((contract, index) => (
+                <CarouselItem key={index} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <ProposalCard
+                    key={contract.title}
+                    title={contract.title}
+                    author={contract.author}
+                    authorRole={contract.authorRole}
+                    description={contract.description}
+                    status={contract.status}
+                    votes={contract.votes}
+                    endDate={contract.endDate}
+                    category={contract.category}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex justify-center mt-4">
+              <CarouselPrevious className="relative static mr-2" />
+              <CarouselNext className="relative static ml-2" />
+            </div>
+          </Carousel>
+        ) : searchQuery ? (
+          <div className="bg-card/30 p-8 text-center rounded-lg border border-primary/20">
+            <p className="text-gray-300">No contracts found matching your search criteria.</p>
           </div>
-        </Carousel>
+        ) : null}
       </section>
     </Layout>
   );
