@@ -21,6 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Edit, Trash } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 interface GroupData {
   id: string;
@@ -63,6 +65,7 @@ const AdminGroups: React.FC = () => {
   const [groups, setGroups] = useState<GroupData[]>(mockGroups);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newGroup, setNewGroup] = useState({ name: '', description: '' });
+  const { direction } = useLanguage();
 
   const handleCreateGroup = () => {
     const newGroupData: GroupData = {
@@ -85,45 +88,47 @@ const AdminGroups: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">إدارة المجموعات التجارية</h2>
+      <div className={cn("flex justify-between items-center", direction === "rtl" ? "flex-row-reverse" : "")}>
+        <h2 className="text-2xl font-bold text-primary">إدارة المجموعات التجارية</h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button><Plus className="mr-2" />إنشاء مجموعة جديدة</Button>
+            <Button className="bg-primary hover:bg-primary/80">
+              <Plus className="mr-2 h-4 w-4" />إنشاء مجموعة جديدة
+            </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-card border-sidebar-border">
             <DialogHeader>
-              <DialogTitle>إنشاء مجموعة جديدة</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-primary text-xl">إنشاء مجموعة جديدة</DialogTitle>
+              <DialogDescription className="text-gray-300">
                 أدخل تفاصيل المجموعة التجارية الجديدة.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right col-span-1">
+                <Label htmlFor="name" className={cn("text-right col-span-1", direction === "rtl" ? "text-right" : "text-left")}>
                   الاسم
                 </Label>
                 <Input 
                   id="name" 
                   value={newGroup.name} 
                   onChange={(e) => setNewGroup({...newGroup, name: e.target.value})}
-                  className="col-span-3" 
+                  className="col-span-3 bg-sidebar-accent text-white" 
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right col-span-1">
+                <Label htmlFor="description" className={cn("text-right col-span-1", direction === "rtl" ? "text-right" : "text-left")}>
                   الوصف
                 </Label>
                 <Input 
                   id="description" 
                   value={newGroup.description} 
                   onChange={(e) => setNewGroup({...newGroup, description: e.target.value})}
-                  className="col-span-3" 
+                  className="col-span-3 bg-sidebar-accent text-white" 
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleCreateGroup}>إنشاء المجموعة</Button>
+              <Button onClick={handleCreateGroup} className="bg-primary hover:bg-primary/80">إنشاء المجموعة</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -131,42 +136,48 @@ const AdminGroups: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {groups.map((group) => (
-          <Card key={group.id}>
+          <Card key={group.id} className="bg-card border border-sidebar-border hover:border-primary/30 transition-all duration-300">
             <CardHeader>
               <div className="flex justify-between">
-                <CardTitle>{group.name}</CardTitle>
+                <CardTitle className="text-primary">{group.name}</CardTitle>
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Edit className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" className="hover:bg-primary/20">
+                    <Edit className="h-4 w-4 text-gray-300" />
                   </Button>
                   <Button 
                     variant="ghost" 
                     size="icon" 
                     onClick={() => handleDeleteGroup(group.id)}
+                    className="hover:bg-red-500/20"
                   >
-                    <Trash className="h-4 w-4" />
+                    <Trash className="h-4 w-4 text-gray-300" />
                   </Button>
                 </div>
               </div>
-              <CardDescription>
+              <CardDescription className="text-gray-400">
                 تاريخ الإنشاء: {group.createdAt}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>{group.description}</p>
+              <p className="text-gray-300">{group.description}</p>
               <div className="mt-4 flex justify-between text-sm">
-                <span>عدد الأعضاء: {group.memberCount}</span>
+                <span className="text-gray-400">عدد الأعضاء: {group.memberCount}</span>
                 <span className={`px-2 py-1 rounded-full ${
                   group.status === 'active' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-gray-100 text-gray-800'
+                    ? 'bg-green-900/50 text-green-300' 
+                    : 'bg-gray-800 text-gray-400'
                 }`}>
                   {group.status === 'active' ? 'نشط' : 'غير نشط'}
                 </span>
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">عرض التفاصيل</Button>
+              <Button 
+                variant="outline" 
+                className="w-full hover:bg-primary/20 border-sidebar-border hover:border-primary/50"
+              >
+                عرض التفاصيل
+              </Button>
             </CardFooter>
           </Card>
         ))}

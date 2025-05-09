@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Filter, Download } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 
 interface PaymentData {
   id: string;
@@ -73,6 +75,7 @@ const AdminPayments: React.FC = () => {
   const [payments] = useState<PaymentData[]>(mockPayments);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string | undefined>();
+  const { direction } = useLanguage();
 
   const filteredPayments = payments.filter(payment => {
     return (
@@ -86,34 +89,38 @@ const AdminPayments: React.FC = () => {
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'paid':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-900/50 text-green-300';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-amber-900/50 text-amber-300';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-900/50 text-red-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-800 text-gray-300';
     }
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">إدارة المدفوعات والفواتير</h2>
-        <Button variant="outline">
+      <div className={cn("flex justify-between items-center", direction === "rtl" ? "flex-row-reverse" : "")}>
+        <h2 className="text-2xl font-bold text-primary">إدارة المدفوعات والفواتير</h2>
+        <Button variant="outline" className="border-sidebar-border hover:bg-primary/20 hover:border-primary/50">
           <Download className="mr-2 h-4 w-4" />
           تصدير البيانات
         </Button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className={cn("flex flex-col md:flex-row gap-4", direction === "rtl" ? "md:flex-row-reverse" : "")}>
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className={cn("absolute top-3 h-4 w-4 text-muted-foreground", 
+            direction === "rtl" ? "right-3" : "left-3"
+          )} />
           <Input
             placeholder="البحث عن عميل أو رقم فاتورة..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className={cn("bg-sidebar-accent text-white border-sidebar-border", 
+              direction === "rtl" ? "pr-10" : "pl-10"
+            )}
           />
         </div>
         <div className="w-full md:w-48">
@@ -121,10 +128,10 @@ const AdminPayments: React.FC = () => {
             onValueChange={setFilterStatus}
             value={filterStatus}
           >
-            <SelectTrigger>
+            <SelectTrigger className="bg-sidebar-accent text-white border-sidebar-border">
               <SelectValue placeholder="فلترة حسب الحالة" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-card border-sidebar-border">
               <SelectItem value="paid">مدفوعة</SelectItem>
               <SelectItem value="pending">قيد الانتظار</SelectItem>
               <SelectItem value="failed">فشلت</SelectItem>
@@ -133,22 +140,22 @@ const AdminPayments: React.FC = () => {
         </div>
       </div>
 
-      <div className="rounded-lg border overflow-hidden">
+      <div className="rounded-lg border border-sidebar-border overflow-hidden bg-card/50">
         <Table>
           <TableCaption>قائمة المدفوعات والفواتير</TableCaption>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-[150px]">رقم الفاتورة</TableHead>
-              <TableHead>العميل</TableHead>
-              <TableHead>المبلغ</TableHead>
-              <TableHead>بوابة الدفع</TableHead>
-              <TableHead>التاريخ</TableHead>
-              <TableHead>الحالة</TableHead>
+            <TableRow className="hover:bg-primary/5 border-sidebar-border">
+              <TableHead className="w-[150px] text-primary">رقم الفاتورة</TableHead>
+              <TableHead className="text-primary">العميل</TableHead>
+              <TableHead className="text-primary">المبلغ</TableHead>
+              <TableHead className="text-primary">بوابة الدفع</TableHead>
+              <TableHead className="text-primary">التاريخ</TableHead>
+              <TableHead className="text-primary">الحالة</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredPayments.map((payment) => (
-              <TableRow key={payment.id}>
+              <TableRow key={payment.id} className="hover:bg-primary/5 border-sidebar-border">
                 <TableCell className="font-medium">{payment.invoiceNumber}</TableCell>
                 <TableCell>{payment.customer}</TableCell>
                 <TableCell>{payment.amount} {payment.currency}</TableCell>
