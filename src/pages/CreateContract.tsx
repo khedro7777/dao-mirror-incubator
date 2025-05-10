@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, FileText, Users, Send, AlertCircle } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 const CreateContract = () => {
   const { t } = useTranslation();
@@ -29,173 +31,232 @@ const CreateContract = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Create New Contract</h1>
+      <div className="mb-6 bg-gradient-to-r from-primary/20 to-secondary/20 p-6 rounded-xl">
+        <h1 className="text-3xl font-bold text-gradient-primary mb-2">
+          {t('createContract')}
+        </h1>
         <p className="text-gray-300">
-          Define your contract details, terms, and invite participants
+          {t('createContractDesc')}
         </p>
       </div>
 
-      <div className="space-y-8">
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Contract Type</h2>
-          <Tabs defaultValue="group-buying" className="w-full" onValueChange={setContractType}>
-            <TabsList className="grid grid-cols-4 mb-6">
-              <TabsTrigger value="group-buying">Group Buying</TabsTrigger>
-              <TabsTrigger value="funding">Funding</TabsTrigger>
-              <TabsTrigger value="freelance">Freelance</TabsTrigger>
-              <TabsTrigger value="group-marketing">Group Marketing</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="group-buying" className="space-y-4">
-              <p className="text-gray-300 text-sm">
-                Create a group buying contract to pool resources with other participants and negotiate better deals with suppliers.
-              </p>
-            </TabsContent>
-            
-            <TabsContent value="funding" className="space-y-4">
-              <p className="text-gray-300 text-sm">
-                Create a funding contract to gather investments for your project with clear terms and goals.
-              </p>
-            </TabsContent>
-            
-            <TabsContent value="freelance" className="space-y-4">
-              <p className="text-gray-300 text-sm">
-                Create a freelance contract to define work terms, deliverables, and payment schedules.
-              </p>
-            </TabsContent>
-            
-            <TabsContent value="group-marketing" className="space-y-4">
-              <p className="text-gray-300 text-sm">
-                Create a group marketing contract to collaborate with other businesses on marketing campaigns and share costs.
-              </p>
-            </TabsContent>
-          </Tabs>
-        </Card>
-        
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Contract Title
-              </label>
-              <input 
-                type="text" 
-                className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter a descriptive title"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Category
-              </label>
-              <select 
-                className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="">Select a category</option>
-                <option value="technology">Technology</option>
-                <option value="retail">Retail</option>
-                <option value="manufacturing">Manufacturing</option>
-                <option value="services">Services</option>
-                <option value="marketing">Marketing</option>
-                <option value="advertising">Advertising</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Description
-              </label>
-              <textarea 
-                className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Describe the purpose and goals of this contract"
-                rows={4}
-              />
-            </div>
-          </div>
-          
-          <div className="mt-6 flex items-center">
-            <Switch
-              checked={web3Enabled}
-              onCheckedChange={setWeb3Enabled}
-              id="web3-toggle"
-            />
-            <label htmlFor="web3-toggle" className="ml-2 text-sm text-gray-300">
-              This contract is Web3-based (coming soon)
-            </label>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Contract Terms</h2>
-          <p className="text-gray-300 text-sm mb-4">
-            Define the terms that participants will vote on. Each term can be individually approved or rejected.
-          </p>
-          
-          <div className="space-y-4">
-            {terms.map((term) => (
-              <div key={term.id} className="flex items-start gap-4">
-                <div className="flex-grow">
-                  <textarea 
-                    className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder={`Term ${term.id}: Define this contract term...`}
-                    rows={2}
-                    value={term.content}
-                    onChange={(e) => handleTermChange(term.id, e.target.value)}
-                  />
+      <div className="space-y-6">
+        <Card className="border-primary/20 bg-card/80 backdrop-blur-sm shadow-lg">
+          <CardHeader className="border-b border-primary/10 pb-4">
+            <CardTitle className="text-xl text-gradient-primary">
+              <FileText className="inline mr-2 h-5 w-5" />
+              {t('contractType')}
+            </CardTitle>
+            <CardDescription>
+              {t('selectContractType')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <Tabs defaultValue="group-buying" className="w-full" onValueChange={setContractType}>
+              <TabsList className="grid grid-cols-4 mb-6">
+                <TabsTrigger value="group-buying" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                  {t('groupBuying')}
+                </TabsTrigger>
+                <TabsTrigger value="funding" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                  {t('funding')}
+                </TabsTrigger>
+                <TabsTrigger value="freelance" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                  {t('freelance')}
+                </TabsTrigger>
+                <TabsTrigger value="group-marketing" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                  {t('groupMarketing')}
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="group-buying" className="space-y-4">
+                <div className="bg-sidebar/30 p-4 rounded-lg border border-primary/10">
+                  <p className="text-white text-sm leading-relaxed">
+                    {t('groupBuyingDesc')}
+                  </p>
                 </div>
-                <Button 
-                  variant="destructive" 
-                  size="icon"
-                  onClick={() => handleRemoveTerm(term.id)}
-                  disabled={terms.length === 1}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+              </TabsContent>
+              
+              <TabsContent value="funding" className="space-y-4">
+                <div className="bg-sidebar/30 p-4 rounded-lg border border-primary/10">
+                  <p className="text-white text-sm leading-relaxed">
+                    {t('fundingDesc')}
+                  </p>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="freelance" className="space-y-4">
+                <div className="bg-sidebar/30 p-4 rounded-lg border border-primary/10">
+                  <p className="text-white text-sm leading-relaxed">
+                    {t('freelanceDesc')}
+                  </p>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="group-marketing" className="space-y-4">
+                <div className="bg-sidebar/30 p-4 rounded-lg border border-primary/10">
+                  <p className="text-white text-sm leading-relaxed">
+                    {t('groupMarketingDesc')}
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-primary/20 bg-card/80 backdrop-blur-sm shadow-lg">
+          <CardHeader className="border-b border-primary/10 pb-4">
+            <CardTitle className="text-xl text-gradient-primary">
+              {t('basicInformation')}
+            </CardTitle>
+            <CardDescription>
+              {t('fillBasicInfo')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-white mb-2">
+                  {t('contractTitle')}
+                </label>
+                <Input 
+                  type="text" 
+                  className="w-full bg-sidebar/50 text-white border-primary/30 focus:border-primary focus-visible:ring-primary"
+                  placeholder={t('enterTitle')}
+                />
               </div>
-            ))}
-            
-            <Button 
-              variant="outline" 
-              className="w-full mt-2" 
-              onClick={handleAddTerm}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Term
-            </Button>
-          </div>
-        </Card>
-        
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Participants</h2>
-          <p className="text-gray-300 text-sm mb-4">
-            Invite participants to join this contract. You can add more participants later.
-          </p>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Email Addresses
-              </label>
-              <textarea 
-                className="w-full bg-sidebar rounded-lg border border-sidebar-border px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter email addresses, separated by commas"
-                rows={3}
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                Participants will receive an invitation email to join this contract
-              </p>
+              
+              <div className="form-group">
+                <label className="block text-sm font-medium text-white mb-2">
+                  {t('category')}
+                </label>
+                <select 
+                  className="w-full bg-sidebar/50 rounded-lg border border-primary/30 px-4 py-2 text-white focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <option value="">{t('selectCategory')}</option>
+                  <option value="technology">{t('technology')}</option>
+                  <option value="retail">{t('retail')}</option>
+                  <option value="manufacturing">{t('manufacturing')}</option>
+                  <option value="services">{t('services')}</option>
+                  <option value="marketing">{t('marketing')}</option>
+                  <option value="advertising">{t('advertising')}</option>
+                  <option value="other">{t('other')}</option>
+                </select>
+              </div>
+              
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-white mb-2">
+                  {t('description')}
+                </label>
+                <Textarea 
+                  className="w-full bg-sidebar/50 rounded-lg border border-primary/30 px-4 py-2 text-white focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                  placeholder={t('describeContract')}
+                  rows={4}
+                />
+              </div>
             </div>
-          </div>
+            
+            <div className="mt-6 flex items-center p-3 bg-sidebar/30 rounded-lg border border-primary/10">
+              <Switch
+                checked={web3Enabled}
+                onCheckedChange={setWeb3Enabled}
+                id="web3-toggle"
+              />
+              <label htmlFor="web3-toggle" className="ml-2 text-sm text-white">
+                {t('web3Based')}
+                <span className="ml-2 text-xs px-2 py-0.5 bg-accent/80 text-white rounded-full">
+                  {t('comingSoon')}
+                </span>
+              </label>
+            </div>
+          </CardContent>
         </Card>
         
-        <div className="flex justify-end gap-4">
-          <Button variant="outline">Save as Draft</Button>
-          <Button>Create Contract</Button>
+        <Card className="border-primary/20 bg-card/80 backdrop-blur-sm shadow-lg">
+          <CardHeader className="border-b border-primary/10 pb-4">
+            <CardTitle className="text-xl text-gradient-primary">
+              {t('contractTerms')}
+            </CardTitle>
+            <CardDescription>
+              {t('defineTerms')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              {terms.map((term) => (
+                <div key={term.id} className="flex items-start gap-3 bg-sidebar/30 p-3 rounded-lg border border-primary/10">
+                  <div className="flex-grow">
+                    <div className="text-xs text-white/70 mb-1">
+                      {t('term')} {term.id}
+                    </div>
+                    <Textarea 
+                      className="w-full bg-sidebar/50 rounded-lg border border-primary/30 px-4 py-2 text-white focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                      placeholder={`${t('defineTerm')}...`}
+                      rows={2}
+                      value={term.content}
+                      onChange={(e) => handleTermChange(term.id, e.target.value)}
+                    />
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    onClick={() => handleRemoveTerm(term.id)}
+                    disabled={terms.length === 1}
+                    className="flex-shrink-0 mt-6"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              
+              <Button 
+                variant="outline" 
+                className="w-full mt-4 border-primary/30 hover:bg-primary/20 text-white" 
+                onClick={handleAddTerm}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {t('addTerm')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-primary/20 bg-card/80 backdrop-blur-sm shadow-lg">
+          <CardHeader className="border-b border-primary/10 pb-4">
+            <CardTitle className="text-xl text-gradient-primary">
+              <Users className="inline mr-2 h-5 w-5" />
+              {t('participants')}
+            </CardTitle>
+            <CardDescription>
+              {t('inviteParticipants')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-white mb-2">
+                  {t('emailAddresses')}
+                </label>
+                <Textarea 
+                  className="w-full bg-sidebar/50 rounded-lg border border-primary/30 px-4 py-2 text-white focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                  placeholder={t('enterEmails')}
+                  rows={3}
+                />
+                <p className="text-xs text-gray-400 mt-2">
+                  {t('participantsWillReceive')}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <div className="flex justify-between gap-4 mt-8">
+          <Button variant="outline" className="border-primary/30 hover:bg-primary/20 text-white">
+            {t('saveAsDraft')}
+          </Button>
+          <Button className="bg-primary hover:bg-primary/90 text-white px-8">
+            <Send className="h-4 w-4 mr-2" />
+            {t('createContract')}
+          </Button>
         </div>
       </div>
     </Layout>

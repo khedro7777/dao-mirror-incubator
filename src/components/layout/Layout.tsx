@@ -43,7 +43,7 @@ const Layout = ({ children }: LayoutProps) => {
   }, [isSidebarOpen]);
 
   return (
-    <div className={cn("min-h-screen bg-background text-white", direction === "rtl" ? "rtl" : "ltr")}>
+    <div className={cn("min-h-screen bg-background bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sidebar/30 via-background to-background text-white", direction === "rtl" ? "rtl" : "ltr")}>
       <Header setIsSidebarOpen={setIsSidebarOpen} />
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 

@@ -20,7 +20,7 @@ const RoleCard = ({
   className,
 }: RoleCardProps) => {
   return (
-    <div className={cn("card-modern group", className)}>
+    <div className={cn("card-modern group bg-gradient-to-br from-sidebar/90 to-sidebar/50 border border-primary/10 backdrop-blur-sm", className)}>
       <div className="h-16 w-16 rounded-xl bg-primary/20 flex items-center justify-center text-primary mb-6 group-hover:bg-primary/30 transition-colors">
         {icon}
       </div>
@@ -31,7 +31,7 @@ const RoleCard = ({
       
       <a 
         href={buttonLink}
-        className="inline-block w-full px-4 py-3 bg-primary hover:bg-primary/80 active:bg-primary/70 rounded-lg text-white font-medium text-center transition-colors shadow-md hover:shadow-xl"
+        className="inline-block w-full px-4 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 active:from-primary/80 active:to-primary/60 rounded-lg text-white font-medium text-center transition-colors shadow-md hover:shadow-xl"
       >
         {buttonText}
       </a>

@@ -126,7 +126,7 @@
 
 /* Add some custom design improvements */
 .glass-card {
-  @apply bg-card/90 backdrop-blur-sm border border-white/10 shadow-lg rounded-xl;
+  @apply bg-card/90 backdrop-blur-sm border border-primary/10 shadow-lg rounded-xl;
 }
 
 .content-section {
@@ -138,7 +138,7 @@
 }
 
 .gradient-text {
-  @apply bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
 }
 
 .hover-lift {
@@ -159,7 +159,7 @@
 }
 
 .section-title {
-  @apply text-2xl font-bold text-white;
+  @apply text-2xl font-bold text-gradient-primary;
 }
 
 .form-group {
@@ -171,7 +171,7 @@
 }
 
 .form-control {
-  @apply w-full bg-sidebar/80 rounded-lg border border-sidebar-border px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+  @apply w-full bg-sidebar/80 rounded-lg border border-primary/20 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
 }
 
 .btn {
@@ -179,15 +179,15 @@
 }
 
 .btn-primary {
-  @apply bg-primary hover:bg-primary/90 active:bg-primary/80 text-white;
+  @apply bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white;
 }
 
 .btn-secondary {
-  @apply bg-secondary hover:bg-secondary/90 active:bg-secondary/80 text-white;
+  @apply bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 text-white;
 }
 
 .btn-outline {
-  @apply border border-white/20 hover:bg-white/10 text-white;
+  @apply border border-primary/20 hover:bg-primary/10 text-white;
 }
 
 .btn-icon {
@@ -208,7 +208,7 @@
 }
 
 .card-modern {
-  @apply bg-gradient-to-br from-card to-card/70 backdrop-blur-sm border border-white/10 rounded-xl p-6 shadow-lg transition-all hover:shadow-xl;
+  @apply bg-gradient-to-br from-card to-card/70 backdrop-blur-sm border border-primary/10 rounded-xl p-6 shadow-lg transition-all hover:shadow-xl;
 }
 
 .text-gradient-primary {
@@ -217,4 +217,23 @@
 
 .text-gradient-accent {
   @apply bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent;
+}
+
+/* New animations */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px 0 rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 15px 0 rgba(139, 92, 246, 0.6); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* New card styles */
+.card-glass {
+  @apply bg-sidebar/30 backdrop-blur-md border border-primary/20 rounded-xl p-6;
+}
+
+.input-glass {
+  @apply bg-sidebar/50 border border-primary/30 focus:border-primary text-white;
 }
