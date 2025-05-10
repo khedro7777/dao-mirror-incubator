@@ -14,29 +14,39 @@ const Index = () => {
   
   return (
     <Layout>
-      {/* Welcome Header */}
-      <WelcomeHeader />
+      <div className="space-y-8">
+        {/* Welcome Header */}
+        <WelcomeHeader />
 
-      {/* Search Section */}
-      <SearchSection 
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+        {/* Search Section */}
+        <SearchSection 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
 
-      {/* KYC Status Section */}
-      <KycStatusSection />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            {/* KYC Status Section */}
+            <KycStatusSection />
+          </div>
+          
+          <div className="lg:col-span-2">
+            {/* Role Cards Section */}
+            <RoleCardsSection />
+          </div>
+        </div>
 
-      {/* Role Cards Section */}
-      <RoleCardsSection />
+        {/* Gateway Cards Section */}
+        <GatewayCardsSection />
 
-      {/* Gateway Cards Section */}
-      <GatewayCardsSection />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Arbitration Center Section */}
+          <ArbitrationSection />
 
-      {/* Arbitration Center Section */}
-      <ArbitrationSection />
-
-      {/* Hot Contracts Section */}
-      <HotContractsSection searchQuery={searchQuery} />
+          {/* Hot Contracts Section */}
+          <HotContractsSection searchQuery={searchQuery} />
+        </div>
+      </div>
     </Layout>
   );
 };

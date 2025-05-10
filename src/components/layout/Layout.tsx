@@ -25,8 +25,11 @@ const Layout = ({ children }: LayoutProps) => {
       <Header setIsSidebarOpen={setIsSidebarOpen} />
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
-      <div className={cn("lg:pl-48 transition-all duration-300", direction === "rtl" && "lg:pl-0 lg:pr-48")}>
-        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mt-2">
+      <div className={cn(
+        "transition-all duration-300 pt-16",
+        direction === "rtl" ? "lg:pr-16" : "lg:pl-16"
+      )}>
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </main>
       </div>
