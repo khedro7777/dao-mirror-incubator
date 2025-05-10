@@ -14,7 +14,7 @@ const Index = () => {
   
   return (
     <Layout>
-      <div className="space-y-8">
+      <div className="space-y-8 page-container">
         {/* Welcome Header */}
         <WelcomeHeader />
 
@@ -24,27 +24,35 @@ const Index = () => {
           setSearchQuery={setSearchQuery}
         />
 
+        {/* Two-column layout for KYC Status and Role Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 content-section">
             {/* KYC Status Section */}
             <KycStatusSection />
           </div>
           
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 content-section">
             {/* Role Cards Section */}
             <RoleCardsSection />
           </div>
         </div>
 
         {/* Gateway Cards Section */}
-        <GatewayCardsSection />
+        <div className="content-section">
+          <GatewayCardsSection />
+        </div>
 
+        {/* Two-column layout for Arbitration and Hot Contracts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Arbitration Center Section */}
-          <ArbitrationSection />
+          <div className="content-section">
+            <ArbitrationSection />
+          </div>
 
           {/* Hot Contracts Section */}
-          <HotContractsSection searchQuery={searchQuery} />
+          <div className="content-section">
+            <HotContractsSection searchQuery={searchQuery} />
+          </div>
         </div>
       </div>
     </Layout>

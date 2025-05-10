@@ -53,7 +53,9 @@ const GatewayCardsSection: React.FC = () => {
 
   return (
     <section className="mb-6">
-      <h2 className={cn("text-2xl font-semibold text-white mb-4", direction === "rtl" ? "text-right" : "")}>Explore Gateways</h2>
+      <h2 className={cn("text-2xl font-semibold text-white mb-5 px-1", direction === "rtl" ? "text-right" : "")}>
+        Explore Gateways
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {gatewayCards.map((card, index) => (
           <GatewayCard
@@ -62,6 +64,7 @@ const GatewayCardsSection: React.FC = () => {
             description={card.description}
             buttonText={card.buttonText}
             buttonLink={card.buttonLink}
+            className="glass-card hover-lift"
           />
         ))}
       </div>

@@ -25,7 +25,7 @@ const SearchInput = ({
       <Search 
         className={cn(
           "absolute top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none", 
-          direction === "rtl" ? "left-3" : "right-3"
+          direction === "rtl" ? "left-4" : "right-4"
         )} 
         size={18} 
       />
@@ -35,8 +35,8 @@ const SearchInput = ({
         value={value}
         onChange={onChange}
         className={cn(
-          "w-full bg-card/80 border-primary/30 text-white focus-visible:ring-primary",
-          direction === "rtl" ? "pl-10 pr-4 text-right" : "pr-10 pl-4",
+          "w-full bg-card/60 border-primary/30 text-white focus-visible:ring-primary focus-visible:border-primary py-6",
+          direction === "rtl" ? "pl-12 pr-4 text-right" : "pr-12 pl-4",
           className
         )}
       />

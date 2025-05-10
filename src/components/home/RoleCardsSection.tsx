@@ -42,8 +42,8 @@ const RoleCardsSection: React.FC = () => {
 
   return (
     <section className="mb-6">
-      <h2 className={cn("text-2xl font-semibold text-white mb-4", direction === "rtl" ? "text-right" : "")}>Get Started</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <h2 className={cn("text-2xl font-semibold text-white mb-4 px-1", direction === "rtl" ? "text-right" : "")}>Get Started</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {roleCards.map((card, index) => (
           <RoleCard
             key={index}
@@ -52,6 +52,7 @@ const RoleCardsSection: React.FC = () => {
             icon={card.icon}
             buttonText={card.buttonText}
             buttonLink={card.buttonLink}
+            className="glass-card hover-lift"
           />
         ))}
       </div>

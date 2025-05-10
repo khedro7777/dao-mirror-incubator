@@ -43,23 +43,23 @@ const KycStatusCard = ({ status, className }: KycStatusCardProps) => {
 
   return (
     <div className={cn("bg-card rounded-lg p-6 border border-sidebar-border", className)}>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-5">
         <h3 className="text-lg font-medium text-white">KYC Verification Status</h3>
         <span className={cn("px-3 py-1 rounded-full text-xs font-medium", statusColor)}>
           {status}
         </span>
       </div>
       
-      <div className="mb-4">
-        <div className="h-2 w-full bg-sidebar-accent rounded-full overflow-hidden">
+      <div className="mb-5">
+        <div className="h-3 w-full bg-sidebar-accent rounded-full overflow-hidden">
           <div 
             className={cn("h-full rounded-full", statusColor)}
-            style={{ width: `${progressPercentage}%` }}
+            style={{ width: `${progressPercentage}%`, transition: "width 0.5s ease-in-out" }}
           ></div>
         </div>
       </div>
       
-      <div className="grid grid-cols-3 text-center text-xs">
+      <div className="grid grid-cols-3 text-center text-xs mb-4">
         <div className={cn("font-medium", status === "Not Started" ? "text-gray-300" : "text-gray-400")}>
           Not Started
         </div>
@@ -72,10 +72,10 @@ const KycStatusCard = ({ status, className }: KycStatusCardProps) => {
       </div>
       
       {status === "Not Started" && (
-        <div className="mt-4">
+        <div className="mt-5">
           <a 
             href="/kyc/start" 
-            className="inline-block w-full px-4 py-2 bg-primary hover:bg-primary/80 rounded text-white text-center text-sm font-medium transition-colors"
+            className="inline-block w-full px-4 py-3 bg-primary hover:bg-primary/80 rounded-lg text-white text-center text-sm font-medium transition-colors shadow-md hover:shadow-lg"
           >
             Start KYC Process
           </a>

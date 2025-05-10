@@ -14,17 +14,17 @@ const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, setSearchQue
 
   return (
     <section className="mb-8">
-      <div className="relative">
+      <div className="relative max-w-3xl mx-auto">
         <SearchInput
           placeholder="Search contracts, projects, or opportunities..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-full shadow-md focus-within:shadow-lg transition-shadow"
+          className="shadow-md focus-within:shadow-xl transition-all w-full"
         />
         {searchQuery && (
           <button 
             onClick={() => setSearchQuery("")}
-            className="absolute top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white text-sm bg-primary/20 hover:bg-primary/30 px-2 py-1 rounded-md transition-colors"
+            className="absolute top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white text-sm bg-primary/20 hover:bg-primary/30 px-3 py-1 rounded-md transition-colors"
             style={{ right: direction === "rtl" ? "auto" : "12px", left: direction === "rtl" ? "12px" : "auto" }}
           >
             Clear
