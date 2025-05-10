@@ -5,8 +5,10 @@ import KycStatusCard from "@/components/cards/KycStatusCard";
 const KycStatusSection: React.FC = () => {
   return (
     <section className="mb-8 w-full">
-      <h2 className="text-xl font-semibold text-white mb-4 px-1">Account Verification</h2>
-      <KycStatusCard status="Not Started" className="glass-card hover-lift" />
+      <div className="section-header">
+        <h2 className="section-title">Account Verification</h2>
+      </div>
+      <KycStatusCard status="Not Started" className="card-modern hover-lift" />
     </section>
   );
 };

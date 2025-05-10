@@ -48,10 +48,10 @@ const Layout = ({ children }: LayoutProps) => {
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
       <div className={cn(
-        "transition-all duration-300 pt-16",
-        direction === "rtl" ? "lg:pr-12" : "lg:pl-12"
+        "transition-all duration-300 pt-20", // Increased padding top for better spacing
+        direction === "rtl" ? "lg:pr-16" : "lg:pl-16" // Adjusted sidebar padding
       )}>
-        <main className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+        <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {children}
         </main>
       </div>
